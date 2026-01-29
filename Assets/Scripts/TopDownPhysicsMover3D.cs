@@ -9,19 +9,20 @@ public class TopDownPhysicsMover3D : MonoBehaviour
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private CarryMotorState carryState;
 
-    [Header("Controller Feel (Slop-Friendly)")]
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 10f;
     [SerializeField] private float acceleration = 30f;
     [SerializeField] private float deceleration = 10f;
     [SerializeField] private float turnAssistMultiplier = 1.8f;
-
     [Range(0f, 0.5f)]
     [SerializeField] private float inputDeadzone = 0.20f;
 
-    [Header("Physics")]
-    [SerializeField] private bool freezeRotation = true;
-    [SerializeField] private bool cameraRelative = false;
-    [SerializeField] private Transform cameraTransform;
+    [Header("Rotation (Right Stick)")]
+    [SerializeField] private float rotationSpeed = 720f; // degrees/sec
+    [Range(0f, 0.5f)]
+    [SerializeField] private float lookDeadzone = 0.25f;
+    [Tooltip("If true, player rotates toward movement when right stick idle")]
+    [SerializeField] private bool fallbackRotateToMove = true;
 
     private Rigidbody rb;
 
@@ -29,111 +30,122 @@ public class TopDownPhysicsMover3D : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        if (freezeRotation)
-            rb.freezeRotation = true;
-
         if (playerInput == null)
         {
-            playerInput = GetComponent<PlayerInput>();
-            if (playerInput == null) playerInput = GetComponentInChildren<PlayerInput>(true);
-            if (playerInput == null) playerInput = GetComponentInParent<PlayerInput>();
+            playerInput = GetComponent<PlayerInput>()
+                ?? GetComponentInChildren<PlayerInput>(true)
+                ?? GetComponentInParent<PlayerInput>();
         }
 
         if (carryState == null)
             carryState = GetComponent<CarryMotorState>();
 
-        if (cameraTransform == null && cameraRelative && Camera.main != null)
-            cameraTransform = Camera.main.transform;
+        rb.freezeRotation = true;
     }
 
     void FixedUpdate()
     {
-        if (playerInput == null || !playerInput.user.valid)
-            return;
+        if (playerInput == null || !playerInput.user.valid) return;
 
-        int p = playerInput.playerIndex;
-        var input = JamInput.Get(p);
-        if (input == null)
-            return;
+        var input = JamInput.Get(playerInput.playerIndex);
+        if (input == null) return;
 
-        // Carry modifiers
         float speedMult = 1f;
         bool locked = false;
+
         if (carryState != null)
         {
             speedMult = carryState.speedMultiplier;
             locked = carryState.movementLocked;
         }
 
-        // Read move
-        Vector2 raw = input.Move;
 
-        // Radial deadzone + preserve analog magnitude
-        float mag = raw.magnitude;
-        if (mag < inputDeadzone)
+        Vector2 moveRaw = input.Move;
+        float moveMag = moveRaw.magnitude;
+
+        if (moveMag < inputDeadzone)
         {
-            raw = Vector2.zero;
-            mag = 0f;
+            moveRaw = Vector2.zero;
+            moveMag = 0f;
         }
         else
         {
-            mag = Mathf.InverseLerp(inputDeadzone, 1f, mag);
-            raw = raw.normalized * mag;
+            moveMag = Mathf.InverseLerp(inputDeadzone, 1f, moveMag);
+            moveRaw = moveRaw.normalized * moveMag;
         }
 
-        // If locked, ignore input movement (still physical, can be pushed)
+        Vector3 wishDir = new Vector3(moveRaw.x, 0f, moveRaw.y);
+        if (wishDir.sqrMagnitude > 1f) wishDir.Normalize();
+
+        // If movement is locked (super heavy)
         if (locked)
         {
             Vector3 v0 = rb.linearVelocity;
             Vector3 vXZ0 = new Vector3(v0.x, 0f, v0.z);
-            Vector3 newVXZ0 = Vector3.MoveTowards(vXZ0, Vector3.zero, deceleration * Time.fixedDeltaTime);
+            Vector3 newVXZ0 = Vector3.MoveTowards(
+                vXZ0,
+                Vector3.zero,
+                deceleration * Time.fixedDeltaTime
+            );
             rb.linearVelocity = new Vector3(newVXZ0.x, v0.y, newVXZ0.z);
-            return;
-        }
-
-        // Convert to world
-        Vector3 wishDir = new Vector3(raw.x, 0f, raw.y);
-
-        if (cameraRelative && cameraTransform != null)
-        {
-            Vector3 camForward = cameraTransform.forward;
-            Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
-            camForward.Normalize();
-            camRight.Normalize();
-
-            wishDir = camRight * raw.x + camForward * raw.y;
-        }
-
-        if (wishDir.sqrMagnitude > 1f)
-            wishDir.Normalize();
-
-        // Current velocity XZ
-        Vector3 v = rb.linearVelocity;
-        Vector3 vXZ = new Vector3(v.x, 0f, v.z);
-
-        // Target velocity XZ (carry speed multiplier)
-        Vector3 targetVXZ = wishDir * (maxSpeed * speedMult);
-
-        // Turn assist
-        float rate;
-        if (wishDir.sqrMagnitude > 0f)
-        {
-            float dot = 1f;
-            if (vXZ.sqrMagnitude > 0.01f && targetVXZ.sqrMagnitude > 0.01f)
-                dot = Vector3.Dot(vXZ.normalized, targetVXZ.normalized);
-
-            float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot);
-            float boostedAccel = Mathf.Lerp(acceleration, acceleration * turnAssistMultiplier, turnBoost01);
-            rate = boostedAccel;
         }
         else
         {
-            rate = deceleration;
+            Vector3 v = rb.linearVelocity;
+            Vector3 vXZ = new Vector3(v.x, 0f, v.z);
+
+            Vector3 targetVXZ = wishDir * (maxSpeed * speedMult);
+
+            float rate;
+            if (wishDir.sqrMagnitude > 0f)
+            {
+                float dot = (vXZ.sqrMagnitude > 0.01f && targetVXZ.sqrMagnitude > 0.01f)
+                    ? Vector3.Dot(vXZ.normalized, targetVXZ.normalized)
+                    : 1f;
+
+                float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot);
+                rate = Mathf.Lerp(acceleration, acceleration * turnAssistMultiplier, turnBoost01);
+            }
+            else
+            {
+                rate = deceleration;
+            }
+
+            Vector3 newVXZ = Vector3.MoveTowards(
+                vXZ,
+                targetVXZ,
+                rate * Time.fixedDeltaTime
+            );
+
+            rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
         }
 
-        Vector3 newVXZ = Vector3.MoveTowards(vXZ, targetVXZ, rate * Time.fixedDeltaTime);
-        rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
+        Vector2 lookRaw = input.Look;
+        float lookMag = lookRaw.magnitude;
+
+        bool usingLook = lookMag > lookDeadzone;
+
+        Vector3 lookDir = Vector3.zero;
+
+        if (usingLook)
+        {
+            lookRaw = lookRaw.normalized;
+            lookDir = new Vector3(lookRaw.x, 0f, lookRaw.y);
+        }
+        else if (fallbackRotateToMove && wishDir.sqrMagnitude > 0.01f)
+        {
+            lookDir = wishDir;
+        }
+
+        if (lookDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            Quaternion newRot = Quaternion.RotateTowards(
+                rb.rotation,
+                targetRot,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+            rb.MoveRotation(newRot);
+        }
     }
 }
