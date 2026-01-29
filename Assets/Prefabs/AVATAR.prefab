@@ -613,6 +613,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 8500427103970683525, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_Axis.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8676016187467609132, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: playerInput
