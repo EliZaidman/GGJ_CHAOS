@@ -6,39 +6,26 @@ using UnityEngine.InputSystem;
 public class TopDownPhysicsMover3D : MonoBehaviour
 {
     [Header("Refs")]
-    [Tooltip("If empty, this will search on self, children, then parent.")]
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private CarryMotorState carryState;
 
     [Header("Controller Feel (Slop-Friendly)")]
-    [Tooltip("Max horizontal speed (XZ).")]
     [SerializeField] private float maxSpeed = 10f;
-
-    [Tooltip("Acceleration toward desired speed when pushing stick.")]
     [SerializeField] private float acceleration = 30f;
-
-    [Tooltip("How quickly you slow down when NOT pushing stick (lower = more slide).")]
     [SerializeField] private float deceleration = 10f;
-
-    [Tooltip("Extra accel when reversing direction (helps controller turning feel).")]
     [SerializeField] private float turnAssistMultiplier = 1.8f;
 
-    [Tooltip("Radial deadzone for stick drift.")]
     [Range(0f, 0.5f)]
     [SerializeField] private float inputDeadzone = 0.20f;
 
     [Header("Physics")]
-    [Tooltip("Keep upright / prevent tipping from collisions.")]
     [SerializeField] private bool freezeRotation = true;
-
-    [Tooltip("If true, movement is relative to camera forward/right (good for couch co-op).")]
     [SerializeField] private bool cameraRelative = false;
-
-    [Tooltip("Camera used for camera-relative movement. If empty, uses Camera.main.")]
     [SerializeField] private Transform cameraTransform;
 
     private Rigidbody rb;
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
@@ -52,11 +39,14 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             if (playerInput == null) playerInput = GetComponentInParent<PlayerInput>();
         }
 
+        if (carryState == null)
+            carryState = GetComponent<CarryMotorState>();
+
         if (cameraTransform == null && cameraRelative && Camera.main != null)
             cameraTransform = Camera.main.transform;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if (playerInput == null || !playerInput.user.valid)
             return;
@@ -66,10 +56,19 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         if (input == null)
             return;
 
-        // --- Read move from your JamInput system ---
+        // Carry modifiers
+        float speedMult = 1f;
+        bool locked = false;
+        if (carryState != null)
+        {
+            speedMult = carryState.speedMultiplier;
+            locked = carryState.movementLocked;
+        }
+
+        // Read move
         Vector2 raw = input.Move;
 
-        // --- Radial deadzone + preserve analog magnitude (controller-first) ---
+        // Radial deadzone + preserve analog magnitude
         float mag = raw.magnitude;
         if (mag < inputDeadzone)
         {
@@ -78,12 +77,21 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         }
         else
         {
-            // Remap [deadzone..1] -> [0..1], keep direction
             mag = Mathf.InverseLerp(inputDeadzone, 1f, mag);
             raw = raw.normalized * mag;
         }
 
-        // --- Convert input into world direction ---
+        // If locked, ignore input movement (still physical, can be pushed)
+        if (locked)
+        {
+            Vector3 v0 = rb.linearVelocity;
+            Vector3 vXZ0 = new Vector3(v0.x, 0f, v0.z);
+            Vector3 newVXZ0 = Vector3.MoveTowards(vXZ0, Vector3.zero, deceleration * Time.fixedDeltaTime);
+            rb.linearVelocity = new Vector3(newVXZ0.x, v0.y, newVXZ0.z);
+            return;
+        }
+
+        // Convert to world
         Vector3 wishDir = new Vector3(raw.x, 0f, raw.y);
 
         if (cameraRelative && cameraTransform != null)
@@ -95,21 +103,20 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             camForward.Normalize();
             camRight.Normalize();
 
-            wishDir = (camRight * raw.x) + (camForward * raw.y);
+            wishDir = camRight * raw.x + camForward * raw.y;
         }
 
-        // Clamp for safety (should already be <= 1)
         if (wishDir.sqrMagnitude > 1f)
             wishDir.Normalize();
 
-        // --- Current velocity (XZ only) ---
+        // Current velocity XZ
         Vector3 v = rb.linearVelocity;
         Vector3 vXZ = new Vector3(v.x, 0f, v.z);
 
-        // --- Target velocity (analog magnitude already applied) ---
-        Vector3 targetVXZ = wishDir * maxSpeed;
+        // Target velocity XZ (carry speed multiplier)
+        Vector3 targetVXZ = wishDir * (maxSpeed * speedMult);
 
-        // --- Turn assist: if reversing direction, boost accel so it feels good on stick ---
+        // Turn assist
         float rate;
         if (wishDir.sqrMagnitude > 0f)
         {
@@ -117,7 +124,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             if (vXZ.sqrMagnitude > 0.01f && targetVXZ.sqrMagnitude > 0.01f)
                 dot = Vector3.Dot(vXZ.normalized, targetVXZ.normalized);
 
-            float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot); // 0 = same dir, 1 = opposite dir
+            float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot);
             float boostedAccel = Mathf.Lerp(acceleration, acceleration * turnAssistMultiplier, turnBoost01);
             rate = boostedAccel;
         }
@@ -126,10 +133,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             rate = deceleration;
         }
 
-        // --- Smoothly move current velocity toward target velocity ---
         Vector3 newVXZ = Vector3.MoveTowards(vXZ, targetVXZ, rate * Time.fixedDeltaTime);
-
-        // Apply back, keep Y unchanged
         rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
     }
 }
