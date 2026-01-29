@@ -89,17 +89,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PhysicsHandGrabber_Tether_JamInput
   playerInput: {fileID: 6197515300923906234}
   handAnchorRb: {fileID: 1920517652080286887}
+  handStrength: 3
   grabRadius: 2
   grabbableMask:
     serializedVersion: 2
     m_Bits: 64
-  handStrength: 3
   positionSpring: 900
   positionDamping: 80
   maxForce: 2500
   rotationSpring: 120
+  rotationDamping: 60
   maxTorque: 250
+  linearSlack: 0.06
   ignorePlayerCollision: 1
+  lightSpeedMult: 0.9
+  mediumSpeedMult: 0.65
+  heavySpeedMult: 0.35
 --- !u!1 &3474480131178855678
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,6 +294,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6008797928485341457}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 65b7064edef3f4d4c86eba301d5b55a3,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5934661749121149853}
     - targetCorrespondingSourceObject: {fileID: 2795585408709619495, guid: 65b7064edef3f4d4c86eba301d5b55a3,
         type: 3}
       insertIndex: -1
@@ -630,14 +639,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopDownPhysicsMover3D
   playerInput: {fileID: 6197515300923906234}
+  carryState: {fileID: 5934661749121149853}
   maxSpeed: 7.5
   acceleration: 35
   deceleration: 45
   turnAssistMultiplier: 1.8
   inputDeadzone: 0.15
-  freezeRotation: 1
-  cameraRelative: 0
-  cameraTransform: {fileID: 0}
+  rotationSpeed: 720
+  lookDeadzone: 0.25
+  fallbackRotateToMove: 1
+--- !u!114 &5934661749121149853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625939545321384296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9391cc8dfae20924eb72b3f0701431fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarryMotorState
+  speedMultiplier: 1
+  movementLocked: 0
 --- !u!1 &3741701485125533788 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 972131775198565477, guid: 65b7064edef3f4d4c86eba301d5b55a3,
