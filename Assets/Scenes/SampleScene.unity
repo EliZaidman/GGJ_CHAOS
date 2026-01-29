@@ -182,6 +182,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: JamPlayer 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8502295696439984746, guid: 7908f43c046284a43a01c9f334b0cd08,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -825,6 +830,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: JamPlayer 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8502295696439984746, guid: 7908f43c046284a43a01c9f334b0cd08,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -899,6 +909,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: JamPlayer 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8502295696439984746, guid: 7908f43c046284a43a01c9f334b0cd08,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -972,6 +987,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: JamPlayer 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8502295696439984746, guid: 7908f43c046284a43a01c9f334b0cd08,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7323037466873265996, guid: 7908f43c046284a43a01c9f334b0cd08, type: 3}
@@ -1397,8 +1417,11 @@ MonoBehaviour:
   maxSpeed: 7.5
   acceleration: 35
   deceleration: 45
+  turnAssistMultiplier: 1.8
   inputDeadzone: 0.15
   freezeRotation: 1
+  cameraRelative: 0
+  cameraTransform: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
