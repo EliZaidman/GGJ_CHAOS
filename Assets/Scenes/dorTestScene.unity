@@ -151,6 +151,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1226442123973546700, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1226442123973546700, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2018352170936171092, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -206,6 +216,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: AVATAR
       objectReference: {fileID: 0}
+    - target: {fileID: 3342277291417532173, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3342277291417532173, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770829856413754682, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770829856413754682, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353006498058194739, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353006498058194739, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6597745341238390949, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: m_Enabled
@@ -215,6 +255,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_UpdateMode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834673647915188308, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7834673647915188308, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243378727130022565, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8243378727130022565, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
