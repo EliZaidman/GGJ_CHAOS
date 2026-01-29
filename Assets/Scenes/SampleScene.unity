@@ -1353,6 +1353,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlopCharacter V1
       objectReference: {fileID: 0}
+    - target: {fileID: 3625939545321384296, guid: 2f547b95772eab744914f470e4392622,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4114667604203566034, guid: 2f547b95772eab744914f470e4392622,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1403,11 +1408,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6008797928485341457, guid: 2f547b95772eab744914f470e4392622,
+        type: 3}
+      propertyPath: carryState
+      value: 
+      objectReference: {fileID: 3811733484300657574}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f547b95772eab744914f470e4392622, type: 3}
+--- !u!114 &3811733484300657574 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5934661749121149853, guid: 2f547b95772eab744914f470e4392622,
+    type: 3}
+  m_PrefabInstance: {fileID: 3811733484300657573}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9391cc8dfae20924eb72b3f0701431fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarryMotorState
 --- !u!1001 &7521042383941513802
 PrefabInstance:
   m_ObjectHideFlags: 0
