@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a63cd73e420cce48a877f4afc28374c, type: 3}
+  m_Name: SFX1
+  m_EditorClassIdentifier: 
+  overrideIdName: SFX1
+  bus: 1
+  clips:
+  - {fileID: 8300000, guid: a8f367ef0e3007b428de381d23b141c6, type: 3}
+  volume: 0.024
+  cooldownSeconds: 0
+  loop: 0
+  randomizePitch: 0
+  pitchMin: 1
+  pitchMax: 1
+  use3DWhenPositional: 0
+  minDistance: 1
+  maxDistance: 25

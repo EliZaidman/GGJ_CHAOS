@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4228611681237765579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7319858170042370950}
+  - component: {fileID: 7903656600853476710}
+  - component: {fileID: 6282810491050997313}
+  m_Layer: 0
+  m_Name: Sound Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7319858170042370950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4228611681237765579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7903656600853476710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4228611681237765579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a6c9052f0b84b45914f3fe40b7af9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLogs: 0
+  library: {fileID: 11400000, guid: 5eb3b683d4af7d84e8a15d0f7b72c51b, type: 2}
+  sfxPoolSize: 12
+  sfx3dPoolSize: 8
+  defaultMusicFadeSeconds: 0.75
+  support3DSound: 1
+  mixer: {fileID: 24100000, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  masterGroup: {fileID: 24300002, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  musicGroup: {fileID: -1529705222896478591, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  sfxGroup: {fileID: 1215063003489759366, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  uiGroup: {fileID: 2321602722567678515, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  ambienceGroup: {fileID: -5884813227043964372, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  useAudioMixerRouting: 0
+--- !u!114 &6282810491050997313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4228611681237765579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d39682fb1f1c7540bae4d57d4ea59ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playTemplateMusicOnStart: 1
+  playTemplateSfxOnSpace: 0
