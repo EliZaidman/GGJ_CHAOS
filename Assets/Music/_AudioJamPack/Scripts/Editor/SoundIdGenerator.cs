@@ -9,7 +9,16 @@ using UnityEngine;
 public static class SoundIdGenerator
 {
     private const string OutputFolder = "Assets/JamAudio/Generated";
-    private const string OutputPath = OutputFolder + "/SoundId.cs";
+    private const string OutputFileName = "SoundId.cs";            // keep your current name
+    private static readonly string OutputPath = $"{OutputFolder}/{OutputFileName}";
+
+    // If you previously used different names, include them here so we clean them too.
+    private static readonly string[] LegacyFileNames =
+    {
+        "SoundId.cs",
+        "SoundId.generated.cs",
+        "SoundId.Generated.cs"
+    };
 
     [MenuItem("Tools/JamAudio/Regenerate SoundId Enum")]
     public static void Regenerate()
@@ -28,6 +37,9 @@ public static class SoundIdGenerator
         }
 
         Directory.CreateDirectory(OutputFolder);
+
+        // ✅ Ensure there is exactly ONE generated SoundId file:
+        DeleteAllSoundIdGeneratedFilesExcept(OutputPath);
 
         var used = new HashSet<string>(StringComparer.Ordinal);
         var names = new List<string>();
@@ -65,18 +77,79 @@ public static class SoundIdGenerator
         sb.AppendLine();
         sb.AppendLine("public enum SoundId");
         sb.AppendLine("{");
-
         for (int i = 0; i < names.Count; i++)
-        {
             sb.AppendLine($"    {names[i]} = {i},");
-        }
-
         sb.AppendLine("}");
 
+        // Write (overwrite). If it existed, it is already deleted via AssetDatabase,
+        // but writing is fine either way.
         File.WriteAllText(OutputPath, sb.ToString(), Encoding.UTF8);
 
+        AssetDatabase.ImportAsset(OutputPath);
         AssetDatabase.Refresh();
+
         Debug.Log($"[SoundIdGenerator] Generated {names.Count} ids at {OutputPath}");
+    }
+
+    /// <summary>
+    /// Deletes any SoundId enum files we consider "generated" duplicates,
+    /// so only the one at keepPath remains.
+    /// </summary>
+    private static void DeleteAllSoundIdGeneratedFilesExcept(string keepPath)
+    {
+        // Normalize for comparisons
+        keepPath = keepPath.Replace("\\", "/");
+
+        // 1) Delete any matching filenames anywhere under Assets/
+        // We do a broad search and then filter by filename.
+        var csGuids = AssetDatabase.FindAssets("SoundId t:TextAsset");
+        for (int i = 0; i < csGuids.Length; i++)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(csGuids[i]).Replace("\\", "/");
+            if (string.IsNullOrEmpty(path)) continue;
+
+            var fileName = Path.GetFileName(path);
+            if (!IsLegacyName(fileName)) continue;
+
+            // Don't delete the keep path (we’ll overwrite it anyway, but keep meta stable)
+            if (string.Equals(path, keepPath, StringComparison.OrdinalIgnoreCase))
+            {
+                // If you want to strictly delete then recreate, uncomment:
+                // AssetDatabase.DeleteAsset(path);
+                continue;
+            }
+
+            // Extra safety: only delete if it's in a Generated folder or inside JamAudio.
+            // If you want FULL enforcement (delete any duplicates anywhere), remove this guard.
+            bool looksGenerated =
+                path.Contains("/Generated/", StringComparison.OrdinalIgnoreCase) ||
+                path.Contains("/JamAudio/", StringComparison.OrdinalIgnoreCase);
+
+            if (!looksGenerated)
+                continue;
+
+            AssetDatabase.DeleteAsset(path);
+        }
+
+        // 2) If keepPath exists but you want "delete before create", do it here:
+        // This guarantees a clean rewrite every time.
+        if (AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(keepPath) != null)
+        {
+            AssetDatabase.DeleteAsset(keepPath);
+        }
+
+        // Make sure folder still exists after deletions
+        Directory.CreateDirectory(OutputFolder);
+    }
+
+    private static bool IsLegacyName(string fileName)
+    {
+        for (int i = 0; i < LegacyFileNames.Length; i++)
+        {
+            if (string.Equals(fileName, LegacyFileNames[i], StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
     }
 
     private static SoundLibrary FindSoundLibrary()
@@ -84,7 +157,7 @@ public static class SoundIdGenerator
         var guids = AssetDatabase.FindAssets("t:SoundLibrary");
         if (guids == null || guids.Length == 0) return null;
 
-        // If you have more than one, just picks the first.
+        // If you have more than one, picks the first.
         var path = AssetDatabase.GUIDToAssetPath(guids[0]);
         return AssetDatabase.LoadAssetAtPath<SoundLibrary>(path);
     }
@@ -93,7 +166,6 @@ public static class SoundIdGenerator
     {
         if (string.IsNullOrWhiteSpace(raw)) return "";
 
-        // Remove common prefixes people use in asset names
         raw = raw.Trim();
         raw = raw.Replace("SC_", "", StringComparison.OrdinalIgnoreCase);
         raw = raw.Replace("SL_", "", StringComparison.OrdinalIgnoreCase);
@@ -106,21 +178,19 @@ public static class SoundIdGenerator
             if (char.IsLetterOrDigit(c) || c == '_')
             {
                 if (first && char.IsDigit(c))
-                    sb.Append('_'); // enum can't start with digit
+                    sb.Append('_');
 
                 sb.Append(c);
                 first = false;
             }
             else
             {
-                // turn spaces/dashes/etc into underscore
                 if (sb.Length > 0 && sb[sb.Length - 1] != '_')
                     sb.Append('_');
                 first = false;
             }
         }
 
-        // Trim trailing underscores
         while (sb.Length > 0 && sb[sb.Length - 1] == '_')
             sb.Length--;
 

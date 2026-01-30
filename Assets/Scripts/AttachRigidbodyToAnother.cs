@@ -39,12 +39,16 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     public ForceMode ForceMode = ForceMode.Force;
 
-    MeshRenderer _mr;
-    Color _originalColor;
-    bool _hasColor;
     float _originalDrag;
-
     float _lastSawTargetTime;
+
+    // ===== Highlight (robust) =====
+    static readonly int ColorId = Shader.PropertyToID("_Color");
+    static readonly int BaseColorId = Shader.PropertyToID("_BaseColor"); // URP/HDRP
+    MaterialPropertyBlock _mpb;
+
+    Rigidbody _highlightedRB;
+    Renderer[] _highlightedRenderers;
 
     // Keep compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
@@ -65,6 +69,19 @@ public class AttachRigidbodyToAnother : MonoBehaviour
             _grabAction = ownerPlayerInput.actions.FindAction(grabActionName, true);
             _grabAction.Enable();
         }
+
+        _mpb = new MaterialPropertyBlock();
+    }
+
+    void OnDisable()
+    {
+        // Make sure highlight never stays stuck when object gets disabled
+        ClearTargetVisuals();
+    }
+
+    void OnDestroy()
+    {
+        ClearTargetVisuals();
     }
 
     bool GrabHeld()
@@ -84,6 +101,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
             _connection = null;
 
             if (otherRB != null) otherRB.linearDamping = _originalDrag;
+
+            // IMPORTANT: also clear any lingering highlight
+            ClearTargetVisuals();
             return;
         }
 
@@ -104,7 +124,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         Vector3 delta = targetPos - grabPos;
         float dist = delta.magnitude;
 
-        // snap earlier (easier 1-hand)
         if (dist <= SnapDistance)
         {
             Latch();
@@ -120,11 +139,8 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         f = Mathf.Clamp(f, 0f, MaxPullForce);
 
         Vector3 pull = dir * f;
-
-        // allow lifting but prevent rocket-launch
         pull.y = Mathf.Clamp(pull.y, -300f, 300f);
 
-        // extra close -> snap to avoid solver pop
         if (dist <= SnapDistance * 0.8f)
         {
             Latch();
@@ -183,27 +199,17 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
 
-        // while holding something with this hand, ignore new targets
         if (_connection != null) return;
 
-        // take/refresh target
-        if (otherRB == null || otherRB == cand)
+        // If we touched a NEW candidate, clear old highlight first, then highlight new
+        if (otherRB != cand)
         {
+            ClearTargetVisuals();
             otherRB = cand;
-            _lastSawTargetTime = Time.time;
-
-            // highlight (optional)
-            if (!_hasColor)
-            {
-                _mr = otherRB.GetComponent<MeshRenderer>();
-                if (_mr != null && _mr.material != null)
-                {
-                    _hasColor = true;
-                    _originalColor = _mr.material.color;
-                    _mr.material.color = Highlight;
-                }
-            }
         }
+
+        _lastSawTargetTime = Time.time;
+        ApplyTargetHighlight(otherRB);
     }
 
     void OnTriggerStay(Collider other)
@@ -212,7 +218,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         if (otherRB == null) return;
         if (other.attachedRigidbody != otherRB) return;
 
-        // keep target "alive" while inside trigger
         _lastSawTargetTime = Time.time;
     }
 
@@ -231,14 +236,56 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         _connection = null;
         if (otherRB != null) otherRB.linearDamping = _originalDrag;
+
+        // If the joint breaks, don't leave highlight in some weird state
+        ClearTargetVisuals();
+    }
+
+    void ApplyTargetHighlight(Rigidbody rb)
+    {
+        if (rb == null) return;
+
+        // If we already highlighted this same RB, no need to reapply
+        if (_highlightedRB == rb && _highlightedRenderers != null && _highlightedRenderers.Length > 0)
+            return;
+
+        ClearTargetVisuals();
+
+        _highlightedRB = rb;
+        _highlightedRenderers = rb.GetComponentsInChildren<Renderer>(true);
+
+        if (_highlightedRenderers == null || _highlightedRenderers.Length == 0)
+            return;
+
+        _mpb.Clear();
+
+        // Support both pipelines: URP/HDRP use _BaseColor, built-in uses _Color
+        _mpb.SetColor(BaseColorId, Highlight);
+        _mpb.SetColor(ColorId, Highlight);
+
+        for (int i = 0; i < _highlightedRenderers.Length; i++)
+        {
+            var r = _highlightedRenderers[i];
+            if (r == null) continue;
+            r.SetPropertyBlock(_mpb);
+        }
     }
 
     void ClearTargetVisuals()
     {
-        if (_hasColor && _mr != null && _mr.material != null)
-            _mr.material.color = _originalColor;
+        if (_highlightedRenderers != null)
+        {
+            for (int i = 0; i < _highlightedRenderers.Length; i++)
+            {
+                var r = _highlightedRenderers[i];
+                if (r == null) continue;
 
-        _mr = null;
-        _hasColor = false;
+                // Clearing the property block reverts visuals to the material's original values
+                r.SetPropertyBlock(null);
+            }
+        }
+
+        _highlightedRB = null;
+        _highlightedRenderers = null;
     }
 }

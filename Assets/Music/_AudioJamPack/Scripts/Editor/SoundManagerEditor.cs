@@ -5,7 +5,6 @@ using UnityEngine;
 [CustomEditor(typeof(SoundManager))]
 public class SoundManagerEditor : Editor
 {
-    private static bool _showMixer = false;
     private static bool _showMissingFields = false;
 
     public override void OnInspectorGUI()
@@ -24,39 +23,23 @@ public class SoundManagerEditor : Editor
 
         serializedObject.Update();
 
-        // ─────────────────────────────────────────────────────────────
-        // Find properties (safe: they may not exist in your current SoundManager)
-        // ─────────────────────────────────────────────────────────────
-        var libraryProp       = serializedObject.FindProperty("library");
-        var debugLogsProp     = serializedObject.FindProperty("debugLogs");
+        // Properties that exist in YOUR current SoundManager.cs
+        var libraryProp        = serializedObject.FindProperty("library");
+        var debugLogsProp      = serializedObject.FindProperty("debugLogs");
 
-        var support3DProp     = serializedObject.FindProperty("support3DSound");
+        var masterVolumeProp   = serializedObject.FindProperty("masterVolume");
+        var musicVolumeProp    = serializedObject.FindProperty("musicVolume");
+        var sfxVolumeProp      = serializedObject.FindProperty("sfxVolume");
+        var uiVolumeProp       = serializedObject.FindProperty("uiVolume");
+        var ambienceVolumeProp = serializedObject.FindProperty("ambienceVolume");
 
-        // Volume fields (from the simplified SoundManager I gave you)
-        var masterVolumeProp  = serializedObject.FindProperty("masterVolume");
-        var musicVolumeProp   = serializedObject.FindProperty("musicVolume");
-        var sfxVolumeProp     = serializedObject.FindProperty("sfxVolume");
-        var uiVolumeProp      = serializedObject.FindProperty("uiVolume");
-        var ambienceVolumeProp= serializedObject.FindProperty("ambienceVolume");
-
-        // Old / optional fields (only drawn if they exist)
-        var defaultFadeProp   = serializedObject.FindProperty("defaultMusicFadeSeconds");
-        var sfxPoolSizeProp   = serializedObject.FindProperty("sfxPoolSize");
-        var sfx3dPoolSizeProp = serializedObject.FindProperty("sfx3dPoolSize");
-
-        var mixerProp         = serializedObject.FindProperty("mixer");
-        var masterGroupProp   = serializedObject.FindProperty("masterGroup");
-        var musicGroupProp    = serializedObject.FindProperty("musicGroup");
-        var sfxGroupProp      = serializedObject.FindProperty("sfxGroup");
-        var uiGroupProp       = serializedObject.FindProperty("uiGroup");
-        var ambienceGroupProp = serializedObject.FindProperty("ambienceGroup");
-        var useMixerProp      = serializedObject.FindProperty("useAudioMixerRouting");
+        var support3DProp      = serializedObject.FindProperty("support3DSound");
 
         // ─────────────────────────────────────────────────────────────
         // Library
         // ─────────────────────────────────────────────────────────────
         EditorGUILayout.LabelField("Library", EditorStyles.boldLabel);
-        DrawPropSafe(libraryProp, "library", "SoundLibrary");
+        DrawPropSafe(libraryProp, "SoundLibrary");
 
         if (libraryProp != null && libraryProp.objectReferenceValue == null)
         {
@@ -73,124 +56,54 @@ public class SoundManagerEditor : Editor
         // Core Settings
         // ─────────────────────────────────────────────────────────────
         EditorGUILayout.LabelField("Core Settings", EditorStyles.boldLabel);
-
-        // Draw whichever settings exist in your current SoundManager
-        DrawPropSafe(support3DProp, "support3DSound", "Support 3D SFX");
-        DrawPropSafe(debugLogsProp, "debugLogs", "Debug Logs");
-
-        // If you still have these old fields, they’ll show; if not, nothing breaks.
-        //DrawPropSafe(defaultFadeProp, "defaultMusicFadeSeconds", "Default Music Fade (s)");
-        DrawPropSafe(sfxPoolSizeProp, "sfxPoolSize", "2D SFX Pool Size");
-        DrawPropSafe(sfx3dPoolSizeProp, "sfx3dPoolSize", "3D SFX Pool Size");
+        DrawPropSafe(support3DProp, "Support 3D SFX");
+        DrawPropSafe(debugLogsProp, "Debug Logs");
 
         EditorGUILayout.Space();
 
         // ─────────────────────────────────────────────────────────────
-        // Volumes (for the simplified SoundManager)
+        // Volumes
         // ─────────────────────────────────────────────────────────────
-        bool anyVolume =
-            masterVolumeProp != null ||
-            musicVolumeProp != null ||
-            sfxVolumeProp != null ||
-            uiVolumeProp != null ||
-            ambienceVolumeProp != null;
+        EditorGUILayout.LabelField("Volumes", EditorStyles.boldLabel);
+        DrawPropSafe(masterVolumeProp, "Master Volume");
+        DrawPropSafe(musicVolumeProp, "Music Volume");
+        DrawPropSafe(sfxVolumeProp, "SFX Volume");
+        DrawPropSafe(uiVolumeProp, "UI Volume");
+        DrawPropSafe(ambienceVolumeProp, "Ambience Volume");
 
-        if (anyVolume)
-        {
-            EditorGUILayout.LabelField("Volumes", EditorStyles.boldLabel);
-            DrawPropSafe(masterVolumeProp, "masterVolume", "Master Volume");
-            DrawPropSafe(musicVolumeProp, "musicVolume", "Music Volume");
-            DrawPropSafe(sfxVolumeProp, "sfxVolume", "SFX Volume");
-            DrawPropSafe(uiVolumeProp, "uiVolume", "UI Volume");
-            DrawPropSafe(ambienceVolumeProp, "ambienceVolume", "Ambience Volume");
-            EditorGUILayout.Space();
-        }
+        EditorGUILayout.Space();
 
-        // ─────────────────────────────────────────────────────────────
-        // Audio Mixer foldout (optional legacy)
-        // ─────────────────────────────────────────────────────────────
-        bool mixerSectionExists =
-            useMixerProp != null ||
-            mixerProp != null ||
-            masterGroupProp != null ||
-            musicGroupProp != null ||
-            sfxGroupProp != null ||
-            uiGroupProp != null ||
-            ambienceGroupProp != null;
-
-        if (mixerSectionExists)
-        {
-            _showMixer = EditorGUILayout.Foldout(_showMixer, "Audio Mixer (Optional)", true);
-            if (_showMixer)
-            {
-                EditorGUI.indentLevel++;
-                DrawPropSafe(useMixerProp, "useAudioMixerRouting", "Use AudioMixer Routing");
-                DrawPropSafe(mixerProp, "mixer", "Mixer Asset");
-                DrawPropSafe(masterGroupProp, "masterGroup", "Master Group");
-                DrawPropSafe(musicGroupProp, "musicGroup", "Music Group");
-                DrawPropSafe(sfxGroupProp, "sfxGroup", "SFX Group");
-                DrawPropSafe(uiGroupProp, "uiGroup", "UI Group");
-                DrawPropSafe(ambienceGroupProp, "ambienceGroup", "Ambience Group");
-                EditorGUI.indentLevel--;
-            }
-
-            EditorGUILayout.Space();
-        }
-
-        // ─────────────────────────────────────────────────────────────
-        // Optional: show missing fields list to help you delete old inspector code
-        // ─────────────────────────────────────────────────────────────
+        // Optional debug section: tells you if the editor is looking for wrong fields
         _showMissingFields = EditorGUILayout.ToggleLeft("Show missing-field warnings", _showMissingFields);
-
         if (_showMissingFields)
         {
-            DrawMissingIfNull(libraryProp, "library");
-            DrawMissingIfNull(debugLogsProp, "debugLogs");
-            DrawMissingIfNull(support3DProp, "support3DSound");
-
-            DrawMissingIfNull(masterVolumeProp, "masterVolume");
-            DrawMissingIfNull(musicVolumeProp, "musicVolume");
-            DrawMissingIfNull(sfxVolumeProp, "sfxVolume");
-            DrawMissingIfNull(uiVolumeProp, "uiVolume");
-            DrawMissingIfNull(ambienceVolumeProp, "ambienceVolume");
-
-            DrawMissingIfNull(defaultFadeProp, "defaultMusicFadeSeconds");
-            DrawMissingIfNull(sfxPoolSizeProp, "sfxPoolSize");
-            DrawMissingIfNull(sfx3dPoolSizeProp, "sfx3dPoolSize");
-
-            DrawMissingIfNull(useMixerProp, "useAudioMixerRouting");
-            DrawMissingIfNull(mixerProp, "mixer");
-            DrawMissingIfNull(masterGroupProp, "masterGroup");
-            DrawMissingIfNull(musicGroupProp, "musicGroup");
-            DrawMissingIfNull(sfxGroupProp, "sfxGroup");
-            DrawMissingIfNull(uiGroupProp, "uiGroup");
-            DrawMissingIfNull(ambienceGroupProp, "ambienceGroup");
+            WarnIfMissing(libraryProp, "library");
+            WarnIfMissing(debugLogsProp, "debugLogs");
+            WarnIfMissing(masterVolumeProp, "masterVolume");
+            WarnIfMissing(musicVolumeProp, "musicVolume");
+            WarnIfMissing(sfxVolumeProp, "sfxVolume");
+            WarnIfMissing(uiVolumeProp, "uiVolume");
+            WarnIfMissing(ambienceVolumeProp, "ambienceVolume");
+            WarnIfMissing(support3DProp, "support3DSound");
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // Draw remaining fields without risking crashes
-        // (Only exclude fields that actually exist to avoid confusion)
-        // ─────────────────────────────────────────────────────────────
-        DrawPropertiesExcluding(serializedObject, "m_Script");
-
+        // ✅ IMPORTANT: no DrawPropertiesExcluding here.
+        // If you call it, you’ll draw everything twice.
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawPropSafe(SerializedProperty prop, string fieldName, string label)
+    private void DrawPropSafe(SerializedProperty prop, string label)
     {
-        if (prop == null)
-            return;
-
+        if (prop == null) return;
         EditorGUILayout.PropertyField(prop, new GUIContent(label), includeChildren: true);
     }
 
-    private void DrawMissingIfNull(SerializedProperty prop, string fieldName)
+    private void WarnIfMissing(SerializedProperty prop, string fieldName)
     {
         if (prop != null) return;
-
         EditorGUILayout.HelpBox(
-            $"Field not found on SoundManager: '{fieldName}'.\n" +
-            $"If you removed/renamed it in SoundManager.cs, this is expected.",
+            $"SoundManager field not found: '{fieldName}'.\n" +
+            $"If you renamed/removed it, this is expected.",
             MessageType.None
         );
     }
