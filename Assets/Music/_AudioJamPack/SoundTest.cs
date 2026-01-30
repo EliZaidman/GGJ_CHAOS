@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class SoundTest : MonoBehaviour
 {
@@ -13,11 +15,17 @@ public class SoundTest : MonoBehaviour
     {
         if (playTemplateMusicOnStart)
         {
-            //Debug.Log("[SoundTest] SoundManager instance: " + (SoundManager.Instance != null));
-            //SoundManager.PlayMusic(SoundId.music1);
+            Debug.Log("[SoundTest] SoundManager instance: " + (SoundManager.Instance != null));
+            SoundManager.PlayMusic(SoundId.music1);
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1)){
+            print("f11");
+            SoundManager.PlayAt(SoundId.HitWhooh, transform.position);}
+    }
 }
 
 // for 3d sounds

@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a63cd73e420cce48a877f4afc28374c, type: 3}
-  m_Name: players impact scream
+  m_Name: WallBreak
   m_EditorClassIdentifier: 
-  overrideIdName: impactsScream
+  overrideIdName: BubbleImpact
   bus: 1
-  clips:
-  - {fileID: 0}
+  clips: []
   volume: 1
   cooldownSeconds: 0
   loop: 0
-  randomizePitch: 0
+  randomizePitch: 1
   pitchMin: 1
-  pitchMax: 1
-  use3DWhenPositional: 0
+  pitchMax: 2
+  use3DWhenPositional: 1
   minDistance: 1
   maxDistance: 25
