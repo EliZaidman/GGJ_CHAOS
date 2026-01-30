@@ -24,15 +24,18 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     [Header("Optional snap point (child near palm)")]
     public Transform GrabPoint;
 
-    [Header("Pull (only while NOT latched)")]
-    public float Force = 50f;
-    public float Damping = 10f;
-    public float MaxPullForce = 700f;
-    public float SnapDistance = 0.25f;
+    [Header("Pull / Snap (tuned for 1-hand grabbing)")]
+    public float Force = 250f;
+    public float Damping = 35f;
+    public float MaxPullForce = 3500f;
+    public float SnapDistance = 0.60f;
 
     [Header("Hold Stabilizers")]
-    public float HeldExtraDrag = 3f;
-    public float JointBreakForce = 6000f;
+    public float HeldExtraDrag = 6f;
+    public float JointBreakForce = 15000f;
+
+    [Header("Target Memory (sticky grab)")]
+    public float TargetKeepTime = 0.35f;
 
     public ForceMode ForceMode = ForceMode.Force;
 
@@ -40,6 +43,8 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     Color _originalColor;
     bool _hasColor;
     float _originalDrag;
+
+    float _lastSawTargetTime;
 
     // Keep compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
@@ -55,7 +60,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         _selfPI = ownerPlayerInput;
 
-        // IMPORTANT: this makes it per-player (each PlayerInput has its own paired devices)
         if (ownerPlayerInput != null && ownerPlayerInput.actions != null)
         {
             _grabAction = ownerPlayerInput.actions.FindAction(grabActionName, true);
@@ -73,7 +77,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         bool held = GrabHeld();
 
-        // release
+        // RELEASE
         if (_connection != null && !held)
         {
             Destroy(_connection);
@@ -81,6 +85,13 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
             if (otherRB != null) otherRB.linearDamping = _originalDrag;
             return;
+        }
+
+        // Sticky target memory: if we haven't seen target recently and not holding, forget it
+        if (_connection == null && otherRB != null && (Time.time - _lastSawTargetTime) > TargetKeepTime)
+        {
+            ClearTargetVisuals();
+            otherRB = null;
         }
 
         if (otherRB == null) return;
@@ -93,6 +104,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         Vector3 delta = targetPos - grabPos;
         float dist = delta.magnitude;
 
+        // snap earlier (easier 1-hand)
         if (dist <= SnapDistance)
         {
             Latch();
@@ -109,9 +121,10 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         Vector3 pull = dir * f;
 
-        // stop sky-launch feeling
-        pull.y = 0f;
+        // allow lifting but prevent rocket-launch
+        pull.y = Mathf.Clamp(pull.y, -300f, 300f);
 
+        // extra close -> snap to avoid solver pop
         if (dist <= SnapDistance * 0.8f)
         {
             Latch();
@@ -146,6 +159,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         if (!CanTarget(otherRB))
         {
+            ClearTargetVisuals();
             otherRB = null;
             return;
         }
@@ -159,6 +173,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         _originalDrag = otherRB.linearDamping;
         otherRB.linearDamping = Mathf.Max(_originalDrag, HeldExtraDrag);
+
+        // once latched, visuals don't matter
+        ClearTargetVisuals();
     }
 
     void OnTriggerEnter(Collider other)
@@ -166,32 +183,47 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
 
-        if (otherRB == null && _connection == null)
+        // while holding something with this hand, ignore new targets
+        if (_connection != null) return;
+
+        // take/refresh target
+        if (otherRB == null || otherRB == cand)
         {
             otherRB = cand;
+            _lastSawTargetTime = Time.time;
 
-            _mr = otherRB.GetComponent<MeshRenderer>();
-            if (_mr != null && _mr.material != null)
+            // highlight (optional)
+            if (!_hasColor)
             {
-                _hasColor = true;
-                _originalColor = _mr.material.color;
-                _mr.material.color = Highlight;
+                _mr = otherRB.GetComponent<MeshRenderer>();
+                if (_mr != null && _mr.material != null)
+                {
+                    _hasColor = true;
+                    _originalColor = _mr.material.color;
+                    _mr.material.color = Highlight;
+                }
             }
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if (_connection != null) return;
+        if (otherRB == null) return;
+        if (other.attachedRigidbody != otherRB) return;
+
+        // keep target "alive" while inside trigger
+        _lastSawTargetTime = Time.time;
+    }
+
     void OnTriggerExit(Collider other)
     {
+        if (_connection != null) return;
+
         if (other.attachedRigidbody != null && other.attachedRigidbody == otherRB)
         {
-            if (_connection != null) return;
-
-            if (_hasColor && _mr != null && _mr.material != null)
-                _mr.material.color = _originalColor;
-
-            _mr = null;
-            _hasColor = false;
-            otherRB = null;
+            // don't clear instantly; let TargetKeepTime handle it
+            _lastSawTargetTime = Time.time;
         }
     }
 
@@ -199,5 +231,14 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         _connection = null;
         if (otherRB != null) otherRB.linearDamping = _originalDrag;
+    }
+
+    void ClearTargetVisuals()
+    {
+        if (_hasColor && _mr != null && _mr.material != null)
+            _mr.material.color = _originalColor;
+
+        _mr = null;
+        _hasColor = false;
     }
 }
