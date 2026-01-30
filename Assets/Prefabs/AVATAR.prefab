@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8339894191680780908}
   - component: {fileID: 4755428688365762250}
   - component: {fileID: 3097521422500383360}
+  - component: {fileID: 7024605559802756122}
   m_Layer: 7
   m_Name: AVATAR
   m_TagString: Untagged
@@ -104,9 +105,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TopDownPhysicsMover3D
   playerInput: {fileID: 6192136245934417338}
   carryState: {fileID: 0}
-  maxSpeed: 7.5
-  acceleration: 35
-  deceleration: 45
+  maxSpeed: 7
+  acceleration: 20
+  deceleration: 1
   turnAssistMultiplier: 1.8
   inputDeadzone: 0.15
   rotationSpeed: 720
@@ -255,6 +256,19 @@ MonoBehaviour:
   - {fileID: 2524938237024275724}
   - {fileID: 3428966629967961538}
   - {fileID: 197858514982409952}
+--- !u!114 &7024605559802756122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315804267961358753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff7946400caf164eb09236ec47f3424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  PhysicsMover3D: {fileID: 2872840054049017787}
 --- !u!1001 &8566669346772557708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -396,7 +410,7 @@ PrefabInstance:
     - target: {fileID: 3273283566084796201, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3273283566084796201, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -473,6 +487,12 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 5340400383210277286, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -5668984478841134232, guid: 29c9bfd89f5b9b24c950e518c022deff,
+        type: 3}
     - target: {fileID: 6236729167130174038, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Layer
@@ -612,6 +632,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500427103970683525, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_Axis.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8676016187467609132, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}

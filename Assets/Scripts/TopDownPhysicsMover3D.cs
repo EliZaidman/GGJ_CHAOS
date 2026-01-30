@@ -24,6 +24,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
     [Tooltip("If true, player rotates toward movement when right stick idle")]
     [SerializeField] private bool fallbackRotateToMove = true;
 
+    public float LinearNormalizedSpeed => rb.linearVelocity.magnitude / maxSpeed;
     private Rigidbody rb;
 
     void Awake()
