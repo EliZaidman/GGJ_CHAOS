@@ -287,7 +287,7 @@ Transform:
   m_GameObject: {fileID: 6673224540455632902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 0.251, z: 0.209}
+  m_LocalPosition: {x: 0, y: 0.331, z: 0.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -909,17 +909,17 @@ PrefabInstance:
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.019
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.137
+      value: 0.127
       objectReference: {fileID: 0}
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.322
+      value: 0.387
       objectReference: {fileID: 0}
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -1147,7 +1147,10 @@ MonoBehaviour:
   ownerPlayerInput: {fileID: 6192136245934417338}
   grabActionName: GrabRight
   otherRB: {fileID: 0}
+  highlightMode: 1
   Highlight: {r: 0, g: 1, b: 1, a: 1}
+  OutlineMaterial: {fileID: 0}
+  HighlightLifetime: 0.25
   GrabPoint: {fileID: 197858514982409952}
   Force: 800
   Damping: 20
@@ -1366,7 +1369,10 @@ MonoBehaviour:
   ownerPlayerInput: {fileID: 6192136245934417338}
   grabActionName: GrabLeft
   otherRB: {fileID: 0}
+  highlightMode: 1
   Highlight: {r: 0, g: 1, b: 0.09951186, a: 1}
+  OutlineMaterial: {fileID: 0}
+  HighlightLifetime: 0.25
   GrabPoint: {fileID: 8399683022509824274}
   Force: 800
   Damping: 20
