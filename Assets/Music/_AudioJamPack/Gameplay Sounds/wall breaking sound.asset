@@ -16,7 +16,7 @@ MonoBehaviour:
   bus: 1
   clips:
   - {fileID: 0}
-  volume: 0.024
+  volume: 1
   cooldownSeconds: 0
   loop: 0
   randomizePitch: 0

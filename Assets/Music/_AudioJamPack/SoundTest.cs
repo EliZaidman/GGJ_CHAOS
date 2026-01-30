@@ -24,7 +24,7 @@ public class SoundTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SoundManager.Play(SoundId.SFX1);
+            SoundManager.Play(SoundId.HitWhooh);
             //Debug.Log("[SoundTest] Playing SFX1");
         }
     }
