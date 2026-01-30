@@ -127,6 +127,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 193416955548332412, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_SwingAxis.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 193416955548332412, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_SwingAxis.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 222216832056915209, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_SwingAxis.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 222216832056915209, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_SwingAxis.z
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2018352170936171092, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -181,6 +201,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AVATAR
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: ForceMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: ForceMultiplier
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3097521422500383360, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: bonesToReset.Array.size
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 3444151698174474097, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Mass
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 3444151698174474097, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_LinearDamping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3724510793764493741, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.155
+      objectReference: {fileID: 0}
+    - target: {fileID: 3724510793764493741, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3724510793764493741, guid: 56e088029edaf5945a29772b4b029634,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
