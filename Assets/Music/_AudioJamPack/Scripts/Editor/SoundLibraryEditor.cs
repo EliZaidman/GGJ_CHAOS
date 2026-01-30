@@ -20,7 +20,8 @@ public class SoundLibraryEditor : Editor
         {
             if (GUILayout.Button("Regenerate SoundId Enum", GUILayout.Height(26)))
             {
-                SoundIdGenerator.Regenerate();
+                SoundIdGenerator.UpdateLibraryThenRegenerateEnum();
+
             }
 
             if (GUILayout.Button("Validate", GUILayout.Height(26)))
