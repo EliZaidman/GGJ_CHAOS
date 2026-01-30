@@ -12,17 +12,23 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     public AttachRigidbodyToAnother[] otherSystemsInContext;
 
     [Header("Pull")]
-    public float Force = 50f;                
-    public float Damping = 8f;                
-    public float MaxPullForce = 800f;         
-    public float SnapDistance = 0.25f;       
+    public float Force = 50f;
+    public float Damping = 8f;
+    public float MaxPullForce = 800f;
+    public float SnapDistance = 0.25f;
     public ForceMode ForceMode = ForceMode.Force;
 
     [Header("Where to snap (optional)")]
-    public Transform GrabPoint;              
+    public Transform GrabPoint;
+
+    [Header("Co-op Stability")]
+    public float HeldExtraDrag = 3f;        // NEW: calms jitter when 2 players hold
+    public bool RemoveVerticalPull = true;  // NEW: prevents levitation/climbing
 
     Color _originalColor = Color.gray;
     MeshRenderer _mr;
+    float _originalDrag;
+    bool _dragOverridden;
 
     private void Awake()
     {
@@ -34,12 +40,20 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         float g = grab.ReadValue<float>();
 
+        // Release ONLY your own joint, don't touch other player's joint
         if (_connection != null && g <= 0.05f)
         {
             Destroy(_connection);
             _connection = null;
 
-            if (_mr != null) _mr.material.color = _originalColor;
+            // restore drag only if we changed it
+            if (otherRB != null && _dragOverridden)
+            {
+                otherRB.linearDamping = _originalDrag;
+                _dragOverridden = false;
+            }
+
+            // don't force color changes here (co-op safe)
             return;
         }
 
@@ -53,14 +67,25 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         Vector3 delta = targetPos - grabPos;
         float dist = delta.magnitude;
 
+        // Snap / latch
         if (dist <= SnapDistance)
         {
             _connection = otherRB.gameObject.AddComponent<FixedJoint>();
             _connection.connectedBody = _rb;
             _connection.enableCollision = false;
+
+            // Add drag while held (helps massively with 2 players)
+            if (!_dragOverridden)
+            {
+                _originalDrag = otherRB.linearDamping;
+                otherRB.linearDamping = Mathf.Max(otherRB.linearDamping, HeldExtraDrag);
+                _dragOverridden = true;
+            }
+
             return;
         }
 
+        // Pull (spring + damping)
         Vector3 dir = (dist > 0.0001f) ? (delta / dist) : Vector3.zero;
 
         float spring = Force * dist;
@@ -72,11 +97,15 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         Vector3 pull = dir * f * g;
 
+        // Prevent levitation / climbing when pushing into objects
+        if (RemoveVerticalPull)
+            pull.y = 0f;
+
         _rb.AddForce(pull, ForceMode);
         otherRB.AddForce(-pull * 0.5f, ForceMode);
     }
 
-    // highlight targets
+    // highlight targets (co-op safe: only set on enter, restore only on exit when not holding)
     private void OnTriggerEnter(Collider other)
     {
         if (other.attachedRigidbody == null) return;
@@ -87,7 +116,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
             otherRB = other.attachedRigidbody;
 
             _mr = otherRB.GetComponent<MeshRenderer>();
-            if (_mr != null)
+            if (_mr != null && _mr.material != null)
             {
                 _originalColor = _mr.material.color;
                 _mr.material.color = Highlight;
@@ -99,7 +128,10 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         if (other.attachedRigidbody != null && other.attachedRigidbody == otherRB)
         {
-            if (_mr != null) _mr.material.color = _originalColor;
+            // Only restore color if THIS hand is not holding
+            if (_connection == null && _mr != null && _mr.material != null)
+                _mr.material.color = _originalColor;
+
             _mr = null;
             otherRB = null;
         }
@@ -115,6 +147,13 @@ public class AttachRigidbodyToAnother : MonoBehaviour
             _connection = otherRB.gameObject.AddComponent<FixedJoint>();
             _connection.connectedBody = _rb;
             _connection.enableCollision = false;
+
+            if (!_dragOverridden)
+            {
+                _originalDrag = otherRB.linearDamping;
+                otherRB.linearDamping = Mathf.Max(otherRB.linearDamping, HeldExtraDrag);
+                _dragOverridden = true;
+            }
         }
     }
 
@@ -124,7 +163,12 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         {
             Destroy(_connection);
             _connection = null;
-            if (_mr != null) _mr.material.color = _originalColor;
+
+            if (otherRB != null && _dragOverridden)
+            {
+                otherRB.linearDamping = _originalDrag;
+                _dragOverridden = false;
+            }
         }
     }
 }
