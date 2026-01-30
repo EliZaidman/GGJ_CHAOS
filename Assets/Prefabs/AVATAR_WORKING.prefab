@@ -141,7 +141,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Gamepad
-  m_DefaultActionMap: f5b77cd3-f2b6-47f0-9cb0-ed6d2e499c7a
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &8012249068860970649
@@ -491,22 +491,22 @@ PrefabInstance:
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Mass
-      value: 1.2
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
-        type: 3}
-      propertyPath: m_LinearDamping
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
+      propertyPath: m_LinearDamping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
       propertyPath: m_AngularDamping
-      value: 0.05
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}

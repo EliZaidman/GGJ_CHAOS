@@ -1626,19 +1626,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: AVATAR_WORKING
       objectReference: {fileID: 0}
-    - target: {fileID: 6192136245934417338, guid: 74c3bfdce3e80954590f6d8e4d38353b,
+    - target: {fileID: 6353006498058194739, guid: 74c3bfdce3e80954590f6d8e4d38353b,
         type: 3}
-      propertyPath: m_DefaultActionMap
-      value: f5b77cd3-f2b6-47f0-9cb0-ed6d2e499c7a
+      propertyPath: m_Mass
+      value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: 6192136245934417338, guid: 74c3bfdce3e80954590f6d8e4d38353b,
+    - target: {fileID: 6353006498058194739, guid: 74c3bfdce3e80954590f6d8e4d38353b,
         type: 3}
-      propertyPath: m_DefaultControlScheme
-      value: Gamepad
+      propertyPath: m_Interpolate
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6192136245934417338, guid: 74c3bfdce3e80954590f6d8e4d38353b,
+    - target: {fileID: 6353006498058194739, guid: 74c3bfdce3e80954590f6d8e4d38353b,
         type: 3}
-      propertyPath: m_NeverAutoSwitchControlSchemes
+      propertyPath: m_LinearDamping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353006498058194739, guid: 74c3bfdce3e80954590f6d8e4d38353b,
+        type: 3}
+      propertyPath: m_AngularDamping
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
