@@ -18,9 +18,40 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     [Header("Target")]
     public Rigidbody otherRB;
 
-    [Header("Indicator")]
+    // ===================== HIGHLIGHT (FIXED: reliable reset + multi-renderer) =====================
+    public enum HighlightMode { None, Color, OutlineClone }
+
+    [Header("Highlight")]
+    public HighlightMode highlightMode = HighlightMode.Color;
+
+    [Tooltip("Used when Highlight Mode = Color")]
     public Color Highlight = Color.cyan;
 
+    [Tooltip("Used when Highlight Mode = OutlineClone (your outline/mask material)")]
+    public Material OutlineMaterial;
+
+    [Header("Highlight Auto Clear")]
+    [Tooltip("If > 0, highlight will be removed after this many seconds unless refreshed while overlapping.")]
+    public float HighlightLifetime = 0.25f;
+
+    float _highlightExpireTime;
+
+    // Color highlight (MaterialPropertyBlock) - does not mutate materials
+    static readonly int ColorId = Shader.PropertyToID("_Color");
+    static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+    MaterialPropertyBlock _mpb;
+
+    Rigidbody _highlightedRB;
+    Renderer[] _highlightedRenderers;
+
+    // Outline clones (never touch original materials -> reset is always perfect)
+    const string OutlineClonePrefix = "__OutlineClone__";
+    readonly System.Collections.Generic.List<GameObject> _outlineClones = new System.Collections.Generic.List<GameObject>(16);
+
+    // Robust overlap tracking (fixes multi-collider targets causing stuck visuals)
+    int _targetOverlapCount;
+
+    // ===================== GRAB POINT / FORCES (UNCHANGED PHYSICS) =====================
     [Header("Optional snap point (child near palm)")]
     public Transform GrabPoint;
 
@@ -42,15 +73,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     float _originalDrag;
     float _lastSawTargetTime;
 
-    // ===== Highlight (robust) =====
-    static readonly int ColorId = Shader.PropertyToID("_Color");
-    static readonly int BaseColorId = Shader.PropertyToID("_BaseColor"); // URP/HDRP
-    MaterialPropertyBlock _mpb;
-
-    Rigidbody _highlightedRB;
-    Renderer[] _highlightedRenderers;
-
-    // Keep compatibility with your other scripts
+    // Compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
     public Rigidbody CurrentHeldRigidbody() => otherRB;
 
@@ -73,14 +96,18 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         _mpb = new MaterialPropertyBlock();
     }
 
-    void OnDisable()
+    void Update()
     {
-        // Make sure highlight never stays stuck when object gets disabled
-        ClearTargetVisuals();
+        // Visual-only safety: auto-clear highlight if lifetime expired
+        if (HighlightLifetime > 0f && _highlightedRB != null && Time.time >= _highlightExpireTime)
+        {
+            ClearTargetVisuals();
+        }
     }
 
-    void OnDestroy()
+    void OnDisable()
     {
+        // Ensure visuals never stay on if this gets disabled
         ClearTargetVisuals();
     }
 
@@ -94,24 +121,32 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         bool held = GrabHeld();
 
-        // RELEASE
+        // RELEASE (PHYSICS UNCHANGED)
         if (_connection != null && !held)
         {
             Destroy(_connection);
             _connection = null;
 
-            if (otherRB != null) otherRB.linearDamping = _originalDrag;
+            if (otherRB != null)
+                otherRB.linearDamping = _originalDrag;
 
-            // IMPORTANT: also clear any lingering highlight
+            // polish: ensure visuals are cleared immediately on release
             ClearTargetVisuals();
             return;
         }
 
         // Sticky target memory: if we haven't seen target recently and not holding, forget it
-        if (_connection == null && otherRB != null && (Time.time - _lastSawTargetTime) > TargetKeepTime)
+        // polish: only forget if we're not overlapping any collider of it (avoids flicker)
+        if (_connection == null && otherRB != null)
         {
-            ClearTargetVisuals();
-            otherRB = null;
+            bool expired = (Time.time - _lastSawTargetTime) > TargetKeepTime;
+            bool notOverlapping = _targetOverlapCount <= 0;
+
+            if (expired && notOverlapping)
+            {
+                ClearTargetVisuals();
+                otherRB = null;
+            }
         }
 
         if (otherRB == null) return;
@@ -124,6 +159,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         Vector3 delta = targetPos - grabPos;
         float dist = delta.magnitude;
 
+        // snap earlier (easier 1-hand)
         if (dist <= SnapDistance)
         {
             Latch();
@@ -139,8 +175,11 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         f = Mathf.Clamp(f, 0f, MaxPullForce);
 
         Vector3 pull = dir * f;
+
+        // allow lifting but prevent rocket-launch
         pull.y = Mathf.Clamp(pull.y, -300f, 300f);
 
+        // extra close -> snap to avoid solver pop
         if (dist <= SnapDistance * 0.8f)
         {
             Latch();
@@ -177,6 +216,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         {
             ClearTargetVisuals();
             otherRB = null;
+            _targetOverlapCount = 0;
             return;
         }
 
@@ -199,17 +239,22 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
 
+        // while holding something with this hand, ignore new targets
         if (_connection != null) return;
 
-        // If we touched a NEW candidate, clear old highlight first, then highlight new
+        // If we touched a NEW rigidbody, reset overlap count + visuals for old target
         if (otherRB != cand)
         {
             ClearTargetVisuals();
             otherRB = cand;
+            _targetOverlapCount = 0;
         }
 
+        _targetOverlapCount++;
         _lastSawTargetTime = Time.time;
-        ApplyTargetHighlight(otherRB);
+
+        ApplyTargetVisuals(otherRB);
+        RefreshHighlightTimer();
     }
 
     void OnTriggerStay(Collider other)
@@ -218,35 +263,57 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         if (otherRB == null) return;
         if (other.attachedRigidbody != otherRB) return;
 
+        // keep target "alive" while inside trigger
         _lastSawTargetTime = Time.time;
+
+        // keep visuals alive while inside trigger
+        RefreshHighlightTimer();
+
+        // If timer cleared visuals while still overlapping, re-apply
+        if (_highlightedRB == null)
+            ApplyTargetVisuals(otherRB);
     }
 
     void OnTriggerExit(Collider other)
     {
         if (_connection != null) return;
+        if (otherRB == null) return;
+        if (other.attachedRigidbody != otherRB) return;
 
-        if (other.attachedRigidbody != null && other.attachedRigidbody == otherRB)
+        _targetOverlapCount = Mathf.Max(0, _targetOverlapCount - 1);
+
+        // polish: if we truly left the target (all its colliders), clear visuals immediately
+        if (_targetOverlapCount == 0)
         {
-            // don't clear instantly; let TargetKeepTime handle it
-            _lastSawTargetTime = Time.time;
+            ClearTargetVisuals();
+            _lastSawTargetTime = Time.time; // keep sticky time for re-enter
         }
     }
 
     void OnJointBreak(float breakForce)
     {
         _connection = null;
-        if (otherRB != null) otherRB.linearDamping = _originalDrag;
 
-        // If the joint breaks, don't leave highlight in some weird state
+        if (otherRB != null)
+            otherRB.linearDamping = _originalDrag;
+
+        // polish: joint break should also clear visuals
         ClearTargetVisuals();
     }
 
-    void ApplyTargetHighlight(Rigidbody rb)
+    // ===================== VISUALS =====================
+
+    void RefreshHighlightTimer()
+    {
+        if (HighlightLifetime <= 0f) return;
+        _highlightExpireTime = Time.time + HighlightLifetime;
+    }
+
+    void ApplyTargetVisuals(Rigidbody rb)
     {
         if (rb == null) return;
 
-        // If we already highlighted this same RB, no need to reapply
-        if (_highlightedRB == rb && _highlightedRenderers != null && _highlightedRenderers.Length > 0)
+        if (_highlightedRB == rb)
             return;
 
         ClearTargetVisuals();
@@ -254,14 +321,26 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         _highlightedRB = rb;
         _highlightedRenderers = rb.GetComponentsInChildren<Renderer>(true);
 
-        if (_highlightedRenderers == null || _highlightedRenderers.Length == 0)
+        if (highlightMode == HighlightMode.None)
             return;
 
-        _mpb.Clear();
+        if (highlightMode == HighlightMode.OutlineClone && OutlineMaterial != null)
+        {
+            ApplyOutlineClone();
+        }
+        else if (highlightMode == HighlightMode.Color)
+        {
+            ApplyColorHighlight();
+        }
+    }
 
-        // Support both pipelines: URP/HDRP use _BaseColor, built-in uses _Color
-        _mpb.SetColor(BaseColorId, Highlight);
-        _mpb.SetColor(ColorId, Highlight);
+    void ApplyColorHighlight()
+    {
+        if (_highlightedRenderers == null) return;
+
+        _mpb.Clear();
+        _mpb.SetColor(BaseColorId, Highlight); // URP/HDRP
+        _mpb.SetColor(ColorId, Highlight);     // Built-in
 
         for (int i = 0; i < _highlightedRenderers.Length; i++)
         {
@@ -271,18 +350,89 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         }
     }
 
+    void ApplyOutlineClone()
+    {
+        if (_highlightedRenderers == null) return;
+
+        // Create child renderers that use ONLY the outline material.
+        // We never modify the original materials -> reset is always guaranteed.
+
+        for (int i = 0; i < _highlightedRenderers.Length; i++)
+        {
+            var r = _highlightedRenderers[i];
+            if (r == null) continue;
+
+            // MeshRenderer
+            var mr = r as MeshRenderer;
+            if (mr != null)
+            {
+                var mf = mr.GetComponent<MeshFilter>();
+                if (mf == null || mf.sharedMesh == null) continue;
+
+                // avoid duplicating if something already exists (extra safety)
+                if (mr.transform.Find(OutlineClonePrefix + mr.name) != null) continue;
+
+                var go = new GameObject(OutlineClonePrefix + mr.name);
+                go.transform.SetParent(mr.transform, false);
+
+                var cloneMF = go.AddComponent<MeshFilter>();
+                cloneMF.sharedMesh = mf.sharedMesh;
+
+                var cloneMR = go.AddComponent<MeshRenderer>();
+                cloneMR.sharedMaterial = OutlineMaterial;
+                cloneMR.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                cloneMR.receiveShadows = false;
+
+                _outlineClones.Add(go);
+                continue;
+            }
+
+            // SkinnedMeshRenderer
+            var smr = r as SkinnedMeshRenderer;
+            if (smr != null && smr.sharedMesh != null)
+            {
+                if (smr.transform.Find(OutlineClonePrefix + smr.name) != null) continue;
+
+                var go = new GameObject(OutlineClonePrefix + smr.name);
+                go.transform.SetParent(smr.transform, false);
+
+                var cloneSMR = go.AddComponent<SkinnedMeshRenderer>();
+                cloneSMR.sharedMesh = smr.sharedMesh;
+                cloneSMR.bones = smr.bones;
+                cloneSMR.rootBone = smr.rootBone;
+                cloneSMR.updateWhenOffscreen = true;
+
+                cloneSMR.sharedMaterial = OutlineMaterial;
+                cloneSMR.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                cloneSMR.receiveShadows = false;
+
+                _outlineClones.Add(go);
+            }
+        }
+    }
+
     void ClearTargetVisuals()
     {
+        // Clear property blocks
         if (_highlightedRenderers != null)
         {
             for (int i = 0; i < _highlightedRenderers.Length; i++)
             {
                 var r = _highlightedRenderers[i];
                 if (r == null) continue;
-
-                // Clearing the property block reverts visuals to the material's original values
                 r.SetPropertyBlock(null);
             }
+        }
+
+        // Destroy outline clones (guaranteed reset)
+        if (_outlineClones.Count > 0)
+        {
+            for (int i = 0; i < _outlineClones.Count; i++)
+            {
+                if (_outlineClones[i] != null)
+                    Destroy(_outlineClones[i]);
+            }
+            _outlineClones.Clear();
         }
 
         _highlightedRB = null;
