@@ -86,9 +86,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         if (collision.rigidbody == otherRB && grab.ReadValue<float>() > 0.05f)
         {
-            _connection = otherRB.GetComponent<FixedJoint>();
-            if (_connection == null)
-                _connection = otherRB.AddComponent<FixedJoint>();
+            //_connection = otherRB.GetComponent<FixedJoint>();
+            //if (_connection == null)
+            _connection = otherRB.AddComponent<FixedJoint>();
 
             _connection.connectedBody = _rb;
         }
@@ -96,10 +96,11 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.rigidbody == otherRB && otherRB != null && grab.ReadValue<float>() <= 0.05f)
+        if (_connection != null && grab.ReadValue<float>() <= 0.05f)
         {
             Destroy(_connection);
-            otherRB.GetComponent<MeshRenderer>().material.color = Color.gray;
+            if (otherRB != null)
+                otherRB.GetComponent<MeshRenderer>().material.color = Color.gray;
         }
     }
 }

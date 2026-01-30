@@ -106,7 +106,7 @@ MonoBehaviour:
   playerInput: {fileID: 6192136245934417338}
   carryState: {fileID: 0}
   maxSpeed: 6.5
-  acceleration: 17
+  acceleration: 55
   deceleration: 2
   turnAssistMultiplier: 1.8
   inputDeadzone: 0.15
@@ -389,7 +389,7 @@ PrefabInstance:
     - target: {fileID: 1898467687877730264, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1898467687877730264, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -665,7 +665,7 @@ PrefabInstance:
     - target: {fileID: 7487198083124546880, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7487198083124546880, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -899,6 +899,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 1
       addedObject: {fileID: 4042951732296137552}
+    - targetCorrespondingSourceObject: {fileID: 6542733793663253919, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4593522076648775363}
     - targetCorrespondingSourceObject: {fileID: 2854426623348640358, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       insertIndex: -1
@@ -911,6 +915,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 1
       addedObject: {fileID: 6478310384873098510}
+    - targetCorrespondingSourceObject: {fileID: 560565377065474558, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3713234235508850892}
     - targetCorrespondingSourceObject: {fileID: 8176895440924411613, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       insertIndex: -1
@@ -986,7 +994,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 896
+    m_Bits: 1920
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -1069,6 +1077,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.05
   m_Center: {x: -0.0146440035, y: 0.1, z: 0}
+--- !u!138 &4593522076648775363
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3183651146395214355}
+  serializedVersion: 1
+  m_ConnectedBody: {fileID: 3444151698174474097}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!4 &3428966629967961538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6446004129632584270, guid: c7d6942a74fab5640ada4cbd5477389d,
@@ -1183,7 +1207,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 896
+    m_Bits: 1920
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -1218,6 +1242,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.05
   m_Center: {x: -0.0146440035, y: 0.1, z: 0}
+--- !u!138 &3713234235508850892
+FixedJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8153040745314764402}
+  serializedVersion: 1
+  m_ConnectedBody: {fileID: 3444151698174474097}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!4 &8232823736387982052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 333884230773001576, guid: c7d6942a74fab5640ada4cbd5477389d,
