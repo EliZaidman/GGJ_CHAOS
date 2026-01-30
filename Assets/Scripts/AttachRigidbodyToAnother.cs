@@ -6,12 +6,20 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     Rigidbody _rb;
     FixedJoint _connection;
 
+    [Header("Owner / Input")]
+    [SerializeField] PlayerInput ownerPlayerInput;
+
+    [Tooltip("Must match the action name in your Input Actions asset (e.g. GrabLeft / GrabRight)")]
+    [SerializeField] string grabActionName = "GrabLeft";
+
+    InputAction _grabAction;
+    PlayerInput _selfPI;
+
+    [Header("Target")]
     public Rigidbody otherRB;
-    public InputAction grab;
 
     [Header("Indicator")]
     public Color Highlight = Color.cyan;
-    public Color DefaultColor = Color.gray;
 
     [Header("Optional snap point (child near palm)")]
     public Transform GrabPoint;
@@ -31,30 +39,42 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     MeshRenderer _mr;
     Color _originalColor;
     bool _hasColor;
-
     float _originalDrag;
 
-    Transform _selfRoot; // used to block self-grab
-    PlayerInput _selfPlayerInput;
-
+    // Keep compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
     public Rigidbody CurrentHeldRigidbody() => otherRB;
 
-    private void Awake()
+    void Awake()
     {
         _rb = GetComponentInParent<Rigidbody>();
-        _selfRoot = _rb != null ? _rb.transform.root : transform.root;
-        _selfPlayerInput = GetComponentInParent<PlayerInput>();
+        if (_rb == null) _rb = GetComponent<Rigidbody>();
 
-        grab.Enable();
+        if (ownerPlayerInput == null)
+            ownerPlayerInput = GetComponentInParent<PlayerInput>();
+
+        _selfPI = ownerPlayerInput;
+
+        // IMPORTANT: this makes it per-player (each PlayerInput has its own paired devices)
+        if (ownerPlayerInput != null && ownerPlayerInput.actions != null)
+        {
+            _grabAction = ownerPlayerInput.actions.FindAction(grabActionName, true);
+            _grabAction.Enable();
+        }
     }
 
-    private void FixedUpdate()
+    bool GrabHeld()
     {
-        float g = grab.ReadValue<float>();
+        if (_grabAction == null) return false;
+        return _grabAction.ReadValue<float>() > 0.05f;
+    }
 
-        // RELEASE
-        if (_connection != null && g <= 0.05f)
+    void FixedUpdate()
+    {
+        bool held = GrabHeld();
+
+        // release
+        if (_connection != null && !held)
         {
             Destroy(_connection);
             _connection = null;
@@ -64,9 +84,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         }
 
         if (otherRB == null) return;
-        if (g <= 0.05f) return;
-
-        // already holding with this hand
+        if (!held) return;
         if (_connection != null) return;
 
         Vector3 grabPos = (GrabPoint != null) ? GrabPoint.position : _rb.worldCenterOfMass;
@@ -89,9 +107,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         float f = spring - (Damping * relVel);
         f = Mathf.Clamp(f, 0f, MaxPullForce);
 
-        Vector3 pull = dir * f * g;
+        Vector3 pull = dir * f;
 
-        // keep it ground-y (no levitation)
+        // stop sky-launch feeling
         pull.y = 0f;
 
         if (dist <= SnapDistance * 0.8f)
@@ -110,11 +128,11 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         if (candidate.isKinematic) return false;
         if (candidate == _rb) return false;
 
-        // If the candidate belongs to the same PlayerInput as this hand -> it's self
-        if (_selfPlayerInput != null)
+        // block self, allow other players
+        if (_selfPI != null)
         {
             var otherPI = candidate.GetComponentInParent<PlayerInput>();
-            if (otherPI != null && otherPI == _selfPlayerInput)
+            if (otherPI != null && otherPI == _selfPI)
                 return false;
         }
 
@@ -126,7 +144,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         if (_connection != null) return;
         if (otherRB == null) return;
 
-        // extra safety (in case otherRB was set somehow)
         if (!CanTarget(otherRB))
         {
             otherRB = null;
@@ -144,8 +161,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         otherRB.linearDamping = Mathf.Max(_originalDrag, HeldExtraDrag);
     }
 
-    // highlight targets
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
@@ -164,11 +180,10 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.attachedRigidbody != null && other.attachedRigidbody == otherRB)
         {
-            // If we're holding, keep the reference (don’t drop target just because collider left trigger)
             if (_connection != null) return;
 
             if (_hasColor && _mr != null && _mr.material != null)
@@ -180,26 +195,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (_connection != null) return;
-        if (otherRB == null) return;
-
-        if (collision.rigidbody == otherRB && grab.ReadValue<float>() > 0.05f)
-            Latch();
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (_connection != null && grab.ReadValue<float>() <= 0.05f)
-        {
-            Destroy(_connection);
-            _connection = null;
-            if (otherRB != null) otherRB.linearDamping = _originalDrag;
-        }
-    }
-
-    private void OnJointBreak(float breakForce)
+    void OnJointBreak(float breakForce)
     {
         _connection = null;
         if (otherRB != null) otherRB.linearDamping = _originalDrag;
