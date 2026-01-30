@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-6666)]
 public class testPhysicsMove : MonoBehaviour
 {
     Animator _animator;
@@ -12,15 +13,18 @@ public class testPhysicsMove : MonoBehaviour
         resets = new (Vector3, Quaternion)[bonesToReset.Length];
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         for (int i = 0; i < bonesToReset.Length; i++)
         {
             Transform bone = bonesToReset[i];
             resets[i] = (bone.localPosition, bone.localRotation);
         }
+    }
 
-        _animator.Update(Time.deltaTime);
+    private void LateUpdate()
+    {
+        // _animator.Update(Time.deltaTime);
 
         for (int i = 0; i < bonesToReset.Length; i++)
         {

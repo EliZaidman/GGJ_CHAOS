@@ -3,44 +3,36 @@ using UnityEngine.InputSystem;
 
 public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 {
-    [Header("Player Link")]
+    [Header("Player")]
     [SerializeField] private PlayerInput playerInput;
 
-    [Header("Hand Anchor Rigidbody (this object is best)")]
-    [SerializeField] private Rigidbody handAnchorRb;
+    [Header("Hand Anchors (RBs + Proxy scripts)")]
+    [SerializeField] private Rigidbody rightHandRb;
+    [SerializeField] private Rigidbody leftHandRb;
+    [SerializeField] private HandAnchorProxyRB rightProxy;
+    [SerializeField] private HandAnchorProxyRB leftProxy;
 
-    [Header("Hand Strength")]
-    [SerializeField] private float handStrength = 3f;
+    [Header("Fake IK (no packages, instant)")]
+    [SerializeField] private SimpleTwoBoneIK rightIK;
+    [SerializeField] private SimpleTwoBoneIK leftIK;
 
     [Header("Grab Search")]
-    [SerializeField] private float grabRadius = 0.85f;
+    [SerializeField] private float grabRadius = 0.9f;
     [SerializeField] private LayerMask grabbableMask;
 
-    [Header("Tether Feel (Slop)")]
-    [SerializeField] private float positionSpring = 900f;
-    [SerializeField] private float positionDamping = 80f;
-    [SerializeField] private float maxForce = 2500f;
+    [Header("Hard Lock (still physics)")]
+    [SerializeField] private bool lockLinear = true;
+    [SerializeField] private bool lockAngular = true;
 
-    [SerializeField] private float rotationSpring = 120f;
-    [SerializeField] private float rotationDamping = 60f;
-    [SerializeField] private float maxTorque = 250f;
-
-    [Tooltip("Small slack = drag feel. Bigger slack = more leash.")]
-    [SerializeField] private float linearSlack = 0.06f;
-
-    [Tooltip("Ignore collisions between player colliders and held object.")]
-    [SerializeField] private bool ignorePlayerCollision = true;
-
-    [Header("Carry Mode Multipliers")]
-    [SerializeField] private float lightSpeedMult = 0.90f;
-    [SerializeField] private float mediumSpeedMult = 0.65f;
-    [SerializeField] private float heavySpeedMult = 0.35f;
+    [Header("Collision")]
+    [SerializeField] private bool ignorePlayerCollisionWhileHeld = true;
 
     private Grabbable held;
     private Rigidbody heldRb;
-    private ConfigurableJoint joint;
 
-    private CarryMotorState carryStateOnPlayer;
+    private ConfigurableJoint rightJoint;
+    private ConfigurableJoint leftJoint;
+
     private Collider[] playerColliders;
     private Collider[] heldColliders;
 
@@ -49,14 +41,10 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
         if (playerInput == null)
             playerInput = GetComponentInParent<PlayerInput>();
 
-        if (handAnchorRb == null)
-            handAnchorRb = GetComponent<Rigidbody>();
-
         if (playerInput != null)
-        {
-            carryStateOnPlayer = playerInput.GetComponent<CarryMotorState>();
-            playerColliders = playerInput.GetComponentsInChildren<Collider>(true);
-        }
+            playerColliders = playerInput.transform.root.GetComponentsInChildren<Collider>(true);
+
+        SetIKActive(false);
     }
 
     void Update()
@@ -73,42 +61,113 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
         }
     }
 
-    public bool TryGrab()
+    void TryGrab()
     {
-        if (held != null) return false;
-        if (handAnchorRb == null) return false;
+        var g = FindNearestGrabbable();
+        if (g == null || g.Rigidbody == null) return;
 
-        Grabbable target = FindBestGrabbable();
-        if (target == null) return false;
+        held = g;
+        heldRb = g.Rigidbody;
 
-        if (!target.CanBeHeld(handStrength))
-            return false;
+        // Keep full physics
+        heldRb.isKinematic = false;
+        if (g.disableGravityWhileHeld) heldRb.useGravity = false;
 
-        Grab(target);
-        return true;
+        // Override proxies so HAND goes to OBJECT handles (no object lerp to hand)
+        if (rightProxy != null && g.rightHandle != null) rightProxy.SetOverride(g.rightHandle);
+        if (leftProxy != null && g.leftHandle != null) leftProxy.SetOverride(g.leftHandle);
+
+        // Instant IK to make arms reach straight (no blend)
+        if (rightIK != null && g.rightHandle != null)
+        {
+            rightIK.target = g.rightHandle;
+            rightIK.active = true;
+        }
+        if (leftIK != null && g.leftHandle != null)
+        {
+            leftIK.target = g.leftHandle;
+            leftIK.active = true;
+        }
+
+        // Locked joints (tight)
+        if (rightHandRb != null && g.rightHandle != null)
+            rightJoint = CreateLockedJoint(heldRb, rightHandRb, g.rightHandle);
+
+        if (leftHandRb != null && g.leftHandle != null)
+            leftJoint = CreateLockedJoint(heldRb, leftHandRb, g.leftHandle);
+
+        // Optional ignore collisions
+        if (ignorePlayerCollisionWhileHeld && g.ignorePlayerCollisionWhileHeld)
+        {
+            heldColliders = heldRb.GetComponentsInChildren<Collider>(true);
+            SetHeldCollisionIgnored(true);
+        }
     }
 
-    public void Drop()
+    void Drop()
     {
-        if (held == null) return;
+        if (rightJoint) Destroy(rightJoint);
+        if (leftJoint) Destroy(leftJoint);
+        rightJoint = null;
+        leftJoint = null;
 
-        if (joint != null) Destroy(joint);
-        joint = null;
+        if (rightProxy != null) rightProxy.ClearOverride();
+        if (leftProxy != null) leftProxy.ClearOverride();
 
-        if (ignorePlayerCollision)
-            SetHeldCollisionIgnored(false);
+        SetIKActive(false);
 
-        if (carryStateOnPlayer != null)
-            carryStateOnPlayer.Clear();
+        if (heldColliders != null) SetHeldCollisionIgnored(false);
+        heldColliders = null;
 
         held = null;
         heldRb = null;
-        heldColliders = null;
     }
 
-    private Grabbable FindBestGrabbable()
+    ConfigurableJoint CreateLockedJoint(Rigidbody objectRb, Rigidbody handRb, Transform handle)
     {
-        var hits = Physics.OverlapSphere(handAnchorRb.position, grabRadius, grabbableMask, QueryTriggerInteraction.Collide);
+        var j = objectRb.gameObject.AddComponent<ConfigurableJoint>();
+        j.connectedBody = handRb;
+        j.autoConfigureConnectedAnchor = false;
+
+        j.anchor = objectRb.transform.InverseTransformPoint(handle.position);
+        j.connectedAnchor = Vector3.zero;
+
+        if (lockLinear)
+        {
+            j.xMotion = ConfigurableJointMotion.Locked;
+            j.yMotion = ConfigurableJointMotion.Locked;
+            j.zMotion = ConfigurableJointMotion.Locked;
+        }
+        else
+        {
+            j.xMotion = ConfigurableJointMotion.Limited;
+            j.yMotion = ConfigurableJointMotion.Limited;
+            j.zMotion = ConfigurableJointMotion.Limited;
+            j.linearLimit = new SoftJointLimit { limit = 0.02f };
+        }
+
+        if (lockAngular)
+        {
+            j.angularXMotion = ConfigurableJointMotion.Locked;
+            j.angularYMotion = ConfigurableJointMotion.Locked;
+            j.angularZMotion = ConfigurableJointMotion.Locked;
+        }
+        else
+        {
+            j.angularXMotion = ConfigurableJointMotion.Free;
+            j.angularYMotion = ConfigurableJointMotion.Free;
+            j.angularZMotion = ConfigurableJointMotion.Free;
+        }
+
+        j.enableCollision = true;
+        return j;
+    }
+
+    Grabbable FindNearestGrabbable()
+    {
+        Vector3 origin = rightHandRb ? rightHandRb.position : transform.position;
+
+        var hits = Physics.OverlapSphere(origin, grabRadius, grabbableMask, QueryTriggerInteraction.Collide);
 
         Grabbable best = null;
         float bestDist = float.MaxValue;
@@ -118,103 +177,20 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
             var g = h.GetComponentInParent<Grabbable>();
             if (g == null || g.Rigidbody == null) continue;
 
-            float d = Vector3.Distance(handAnchorRb.position,
-                (g.handle != null) ? g.handle.position : g.Rigidbody.worldCenterOfMass);
-
-            if (d < bestDist)
-            {
-                bestDist = d;
-                best = g;
-            }
+            float d = Vector3.Distance(origin, g.Rigidbody.worldCenterOfMass);
+            if (d < bestDist) { bestDist = d; best = g; }
         }
 
         return best;
     }
 
-    private void Grab(Grabbable g)
+    void SetIKActive(bool on)
     {
-        held = g;
-        heldRb = g.Rigidbody;
-
-        heldRb.isKinematic = false;
-        if (g.disableGravityWhileHeld) heldRb.useGravity = false;
-
-        heldRb.linearVelocity = Vector3.zero;
-        heldRb.angularVelocity = Vector3.zero;
-
-        ApplyCarryEffects(g);
-
-        joint = heldRb.gameObject.AddComponent<ConfigurableJoint>();
-        joint.connectedBody = handAnchorRb;
-        joint.autoConfigureConnectedAnchor = false;
-
-        Vector3 grabWorld = (g.handle != null) ? g.handle.position : heldRb.worldCenterOfMass;
-        joint.anchor = heldRb.transform.InverseTransformPoint(grabWorld);
-
-        joint.connectedAnchor = Vector3.zero;
-
-        joint.xMotion = ConfigurableJointMotion.Limited;
-        joint.yMotion = ConfigurableJointMotion.Limited;
-        joint.zMotion = ConfigurableJointMotion.Limited;
-
-        joint.linearLimit = new SoftJointLimit { limit = linearSlack };
-
-        JointDrive drive = new JointDrive
-        {
-            positionSpring = positionSpring,
-            positionDamper = positionDamping,
-            maximumForce = maxForce
-        };
-        joint.xDrive = drive;
-        joint.yDrive = drive;
-        joint.zDrive = drive;
-
-        joint.rotationDriveMode = RotationDriveMode.Slerp;
-        joint.slerpDrive = new JointDrive
-        {
-            positionSpring = rotationSpring,
-            positionDamper = rotationDamping,
-            maximumForce = maxTorque
-        };
-
-        joint.enableCollision = true;
-
-        if (ignorePlayerCollision)
-        {
-            heldColliders = heldRb.GetComponentsInChildren<Collider>(true);
-            SetHeldCollisionIgnored(true);
-        }
+        if (rightIK != null) rightIK.active = on;
+        if (leftIK != null) leftIK.active = on;
     }
 
-    private void ApplyCarryEffects(Grabbable g)
-    {
-        if (carryStateOnPlayer == null) return;
-
-        // SuperHeavy: stuck (locked)
-        // Heavy: drag slow
-        // Medium: carry slower
-        // Light: minimal change
-        switch (g.carryMode)
-        {
-            case Grabbable.CarryMode.SuperHeavy:
-                carryStateOnPlayer.Apply(0f, true);
-                break;
-
-            case Grabbable.CarryMode.Heavy:
-                carryStateOnPlayer.Apply(heavySpeedMult, false);
-                break;
-
-            case Grabbable.CarryMode.Medium:
-                carryStateOnPlayer.Apply(mediumSpeedMult, false);
-                break;
-
-            default:
-                carryStateOnPlayer.Apply(lightSpeedMult, false);
-                break;
-        }
-    }
-
-    private void SetHeldCollisionIgnored(bool ignored)
+    void SetHeldCollisionIgnored(bool ignored)
     {
         if (playerColliders == null || heldColliders == null) return;
 
@@ -228,10 +204,8 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        if (handAnchorRb != null)
-            Gizmos.DrawWireSphere(handAnchorRb.position, grabRadius);
-        else
-            Gizmos.DrawWireSphere(transform.position, grabRadius);
+        Vector3 origin = rightHandRb ? rightHandRb.position : transform.position;
+        Gizmos.DrawWireSphere(origin, grabRadius);
     }
 #endif
 }
