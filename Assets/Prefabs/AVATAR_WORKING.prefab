@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 4755428688365762250}
   - component: {fileID: 3097521422500383360}
   - component: {fileID: 7024605559802756122}
+  - component: {fileID: 6567973198485873697}
   m_Layer: 7
   m_Name: AVATAR_WORKING
   m_TagString: Untagged
@@ -244,6 +245,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   PhysicsMover3D: {fileID: 2872840054049017787}
+--- !u!114 &6567973198485873697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315804267961358753}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f8712d16565404a8881934979332e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TwoHandCarryAssist
+  leftHand: {fileID: 7094985567233571747}
+  rightHand: {fileID: 3591686513336613281}
+  extraDragWhenTwoHands: 6
+  extraAngularDragWhenTwoHands: 6
 --- !u!1 &6673224540455632902
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +286,7 @@ Transform:
   m_GameObject: {fileID: 6673224540455632902}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.1972, z: -0.003}
+  m_LocalPosition: {x: -0.01, y: 0.251, z: 0.209}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -557,7 +574,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -5668984478841134232, guid: 65b7064edef3f4d4c86eba301d5b55a3,
+      objectReference: {fileID: -5668984478841134232, guid: 29c9bfd89f5b9b24c950e518c022deff,
         type: 3}
     - target: {fileID: 5609581285447922357, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -807,17 +824,37 @@ PrefabInstance:
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.001
+      value: -0.019
       objectReference: {fileID: 0}
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.027
+      value: 0.137
       objectReference: {fileID: 0}
     - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.006
+      value: 0.322
+      objectReference: {fileID: 0}
+    - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8384580062091610476, guid: c7d6942a74fab5640ada4cbd5477389d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8484079678352398836, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -1022,30 +1059,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1a3cecf41a6144e85ea99b7f8e4c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttachRigidbodyToAnother
+  ownerPlayerInput: {fileID: 6192136245934417338}
+  grabActionName: GrabRight
   otherRB: {fileID: 0}
-  grab:
-    m_Name: Grab
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: be30eb16-e008-4abd-9441-9d8cd3004b6a
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: bd1c7821-0dc8-4b7a-aebd-cd3c7cca00da
-      m_Path: <Gamepad>/rightTrigger
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Grab
-      m_Flags: 0
-    m_Flags: 0
   Highlight: {r: 0, g: 1, b: 1, a: 1}
-  DefaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   GrabPoint: {fileID: 197858514982409952}
-  Force: 120
-  Damping: 18
-  MaxPullForce: 1200
+  Force: 800
+  Damping: 20
+  MaxPullForce: 700
   SnapDistance: 0.2
   HeldExtraDrag: 3
   JointBreakForce: 10000
@@ -1256,30 +1277,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1a3cecf41a6144e85ea99b7f8e4c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttachRigidbodyToAnother
+  ownerPlayerInput: {fileID: 6192136245934417338}
+  grabActionName: GrabLeft
   otherRB: {fileID: 0}
-  grab:
-    m_Name: Grab
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: be30eb16-e008-4abd-9441-9d8cd3004b6a
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: bd1c7821-0dc8-4b7a-aebd-cd3c7cca00da
-      m_Path: <Gamepad>/leftTrigger
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Grab
-      m_Flags: 0
-    m_Flags: 0
   Highlight: {r: 0, g: 1, b: 0.09951186, a: 1}
-  DefaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   GrabPoint: {fileID: 8399683022509824274}
-  Force: 120
-  Damping: 18
-  MaxPullForce: 1200
+  Force: 800
+  Damping: 20
+  MaxPullForce: 700
   SnapDistance: 0.2
   HeldExtraDrag: 3
   JointBreakForce: 10000

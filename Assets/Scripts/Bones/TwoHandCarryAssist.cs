@@ -2,39 +2,58 @@ using UnityEngine;
 
 public class TwoHandCarryAssist : MonoBehaviour
 {
-    public Rigidbody rootRB;
+    [Header("Hands (AttachRigidbodyToAnother components)")]
     public AttachRigidbodyToAnother leftHand;
     public AttachRigidbodyToAnother rightHand;
 
-    public float forwardAssistForce = 180f;
-    public float maxSpeedWhileCarrying = 6f;
+    [Header("Assist")]
+    public float extraDragWhenTwoHands = 6f;
+    public float extraAngularDragWhenTwoHands = 6f;
 
-    void Awake()
-    {
-        if (rootRB == null) rootRB = GetComponent<Rigidbody>();
-    }
+    Rigidbody _current;
+    float _origDrag;
+    float _origAngDrag;
 
     void FixedUpdate()
     {
-        if (rootRB == null || leftHand == null || rightHand == null) return;
+        if (leftHand == null || rightHand == null) return;
 
-        // two hands holding SAME rigidbody
-        bool twoHanded =
-            leftHand.IsHoldingSomething() &&
-            rightHand.IsHoldingSomething() &&
-            leftHand.CurrentHeldRigidbody() == rightHand.CurrentHeldRigidbody();
+        bool lHold = leftHand.IsHoldingSomething();
+        bool rHold = rightHand.IsHoldingSomething();
 
-        if (!twoHanded) return;
+        if (!lHold || !rHold)
+        {
+            Clear();
+            return;
+        }
 
-        Vector3 forward = transform.forward;
-        forward.y = 0f;
-        if (forward.sqrMagnitude < 0.001f) return;
-        forward.Normalize();
+        var lrb = leftHand.CurrentHeldRigidbody();
+        var rrb = rightHand.CurrentHeldRigidbody();
 
-        Vector3 vel = rootRB.linearVelocity;
-        vel.y = 0f;
-        if (vel.magnitude > maxSpeedWhileCarrying) return;
+        // only assist if both hands hold the SAME rigidbody
+        if (lrb == null || rrb == null || lrb != rrb)
+        {
+            Clear();
+            return;
+        }
 
-        rootRB.AddForce(forward * forwardAssistForce, ForceMode.Force);
+        if (_current != lrb)
+        {
+            Clear();
+            _current = lrb;
+            _origDrag = _current.linearDamping;
+            _origAngDrag = _current.angularDamping;
+        }
+
+        _current.linearDamping = Mathf.Max(_origDrag, extraDragWhenTwoHands);
+        _current.angularDamping = Mathf.Max(_origAngDrag, extraAngularDragWhenTwoHands);
+    }
+
+    void Clear()
+    {
+        if (_current == null) return;
+        _current.linearDamping = _origDrag;
+        _current.angularDamping = _origAngDrag;
+        _current = null;
     }
 }
