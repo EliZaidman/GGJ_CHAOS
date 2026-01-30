@@ -4,7 +4,7 @@ using UnityEngine;
 public class HandAnchorProxyRB : MonoBehaviour
 {
     [Header("Normal follow target (bone child anchor)")]
-    [SerializeField] private Transform followBone; // e.g. RightHand_Anchor
+    [SerializeField] private Transform followBone;
 
     private Transform overrideTarget;
     private Rigidbody rb;
@@ -16,7 +16,6 @@ public class HandAnchorProxyRB : MonoBehaviour
         rb.useGravity = false;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        // Safety: if not assigned, try parent
         if (followBone == null && transform.parent != null)
             followBone = transform.parent;
     }
@@ -27,8 +26,6 @@ public class HandAnchorProxyRB : MonoBehaviour
     void FixedUpdate()
     {
         Transform t = overrideTarget != null ? overrideTarget : followBone;
-
-        // Critical: if we have no target, DO NOTHING (never go to zero)
         if (t == null) return;
 
         rb.MovePosition(t.position);

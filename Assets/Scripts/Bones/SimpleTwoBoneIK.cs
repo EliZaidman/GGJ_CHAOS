@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
-[DefaultExecutionOrder(20000)] // run after Animator
+[DefaultExecutionOrder(20000)] // after Animator
 public class SimpleTwoBoneIK : MonoBehaviour
 {
     [Header("Bones")]
-    public Transform upper;   // mixamorig:RightArm
-    public Transform lower;   // mixamorig:RightForeArm
-    public Transform hand;    // mixamorig:RightHand
+    public Transform upper;
+    public Transform lower;
+    public Transform hand;
 
     [Header("Targets")]
-    public Transform target;  // handle / target point
-    public Transform hint;    // elbow hint (optional)
+    public Transform target;
+    public Transform hint;
 
     [Header("Enabled")]
     public bool active = false;
@@ -56,25 +56,18 @@ public class SimpleTwoBoneIK : MonoBehaviour
 
         Vector3 dir = toTarget.sqrMagnitude > 0.000001f ? toTarget.normalized : upper.forward;
 
-        // bend plane
         Vector3 bendNormal;
         if (hintPos.HasValue)
         {
             Vector3 toHint = hintPos.Value - rootPos;
             bendNormal = Vector3.Cross(dir, toHint);
-            if (bendNormal.sqrMagnitude < 0.000001f)
-                bendNormal = Vector3.up;
-            else
-                bendNormal.Normalize();
+            if (bendNormal.sqrMagnitude < 0.000001f) bendNormal = Vector3.up;
+            else bendNormal.Normalize();
         }
-        else
-        {
-            bendNormal = Vector3.up;
-        }
+        else bendNormal = Vector3.up;
 
         Vector3 bendDir = Vector3.Cross(bendNormal, dir).normalized;
 
-        // law of cosines
         float cosAngle = (lenUpper * lenUpper + dist * dist - lenLower * lenLower) / (2f * lenUpper * dist);
         cosAngle = Mathf.Clamp(cosAngle, -1f, 1f);
         float angleUpper = Mathf.Acos(cosAngle);
@@ -84,12 +77,8 @@ public class SimpleTwoBoneIK : MonoBehaviour
 
         Vector3 desiredElbow = rootPos + dir * proj + bendDir * height;
 
-        // INSTANT rotations (no blending)
-        Quaternion upperRot = Quaternion.LookRotation(desiredElbow - rootPos, bendNormal);
-        upper.rotation = upperRot;
-
-        Quaternion lowerRot = Quaternion.LookRotation(targetPos - desiredElbow, bendNormal);
-        lower.rotation = lowerRot;
+        upper.rotation = Quaternion.LookRotation(desiredElbow - rootPos, bendNormal);
+        lower.rotation = Quaternion.LookRotation(targetPos - desiredElbow, bendNormal);
 
         if (desiredHandRot.HasValue)
             hand.rotation = desiredHandRot.Value;

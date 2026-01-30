@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,8 +6,13 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 {
     [Header("Player")]
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private CarryMotorState carryState;
 
-    [Header("Hand Anchors (RBs + Proxy scripts)")]
+    [Header("Palm Anchors (Transforms in the palm)")]
+    [SerializeField] private Transform rightPalmAnchor; 
+    [SerializeField] private Transform leftPalmAnchor;
+
+    [Header("Hand Anchor RBs (kinematic)")]
     [SerializeField] private Rigidbody rightHandRb;
     [SerializeField] private Rigidbody leftHandRb;
     [SerializeField] private HandAnchorProxyRB rightProxy;
@@ -19,6 +25,13 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
     [Header("Grab Search")]
     [SerializeField] private float grabRadius = 0.9f;
     [SerializeField] private LayerMask grabbableMask;
+
+    [Header("Reach then Snap")]
+    [Tooltip("How long the arm reaches toward the object before the object snaps into the palm.")]
+    [SerializeField] private float reachTime = 0.12f;
+
+    [Tooltip("If true, match rotation when snapping into the palm.")]
+    [SerializeField] private bool snapRotation = true;
 
     [Header("Hard Lock (still physics)")]
     [SerializeField] private bool lockLinear = true;
@@ -36,10 +49,15 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
     private Collider[] playerColliders;
     private Collider[] heldColliders;
 
+    private Coroutine grabRoutine;
+
     void Awake()
     {
         if (playerInput == null)
             playerInput = GetComponentInParent<PlayerInput>();
+
+        if (carryState == null)
+            carryState = GetComponent<CarryMotorState>();
 
         if (playerInput != null)
             playerColliders = playerInput.transform.root.GetComponentsInChildren<Collider>(true);
@@ -57,55 +75,68 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
         if (input.InteractDown)
         {
             if (held != null) Drop();
-            else TryGrab();
+            else StartGrab();
         }
     }
 
-    void TryGrab()
+    void StartGrab()
     {
         var g = FindNearestGrabbable();
         if (g == null || g.Rigidbody == null) return;
 
+        if (grabRoutine != null) StopCoroutine(grabRoutine);
+
         held = g;
         heldRb = g.Rigidbody;
 
-        // Keep full physics
         heldRb.isKinematic = false;
-        if (g.disableGravityWhileHeld) heldRb.useGravity = false;
 
-        // Override proxies so HAND goes to OBJECT handles (no object lerp to hand)
-        if (rightProxy != null && g.rightHandle != null) rightProxy.SetOverride(g.rightHandle);
-        if (leftProxy != null && g.leftHandle != null) leftProxy.SetOverride(g.leftHandle);
+        SetIKTargetsForReach(g);
+        SetIKActive(true);
 
-        // Instant IK to make arms reach straight (no blend)
-        if (rightIK != null && g.rightHandle != null)
+        grabRoutine = StartCoroutine(ReachThenSnap(g));
+    }
+
+    IEnumerator ReachThenSnap(Grabbable g)
+    {
+        float t = 0f;
+        while (t < reachTime)
         {
-            rightIK.target = g.rightHandle;
-            rightIK.active = true;
-        }
-        if (leftIK != null && g.leftHandle != null)
-        {
-            leftIK.target = g.leftHandle;
-            leftIK.active = true;
+            t += Time.deltaTime;
+            if (held == null || heldRb == null || g == null) yield break;
+
+            SetIKTargetsForReach(g);
+            yield return null;
         }
 
-        // Locked joints (tight)
+        if (held == null || heldRb == null || g == null) yield break;
+
+        SnapObjectIntoPalm(g);
+
+        if (carryState != null)
+            carryState.ApplyMass(heldRb.mass);
+
+        if (ignorePlayerCollisionWhileHeld && g.ignorePlayerCollisionWhileHeld)
+        {
+            heldColliders = heldRb.GetComponentsInChildren<Collider>(true);
+            SetHeldCollisionIgnored(true);
+        }
+
         if (rightHandRb != null && g.rightHandle != null)
             rightJoint = CreateLockedJoint(heldRb, rightHandRb, g.rightHandle);
 
         if (leftHandRb != null && g.leftHandle != null)
             leftJoint = CreateLockedJoint(heldRb, leftHandRb, g.leftHandle);
 
-        // Optional ignore collisions
-        if (ignorePlayerCollisionWhileHeld && g.ignorePlayerCollisionWhileHeld)
-        {
-            heldColliders = heldRb.GetComponentsInChildren<Collider>(true);
-            SetHeldCollisionIgnored(true);
-        }
+        if (rightProxy != null) rightProxy.ClearOverride();
+        if (leftProxy != null) leftProxy.ClearOverride();
     }
 
     void Drop()
     {
+        if (grabRoutine != null) StopCoroutine(grabRoutine);
+        grabRoutine = null;
+
         if (rightJoint) Destroy(rightJoint);
         if (leftJoint) Destroy(leftJoint);
         rightJoint = null;
@@ -119,8 +150,39 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
         if (heldColliders != null) SetHeldCollisionIgnored(false);
         heldColliders = null;
 
+        if (carryState != null)
+            carryState.Clear();
+
         held = null;
         heldRb = null;
+    }
+
+    void SetIKTargetsForReach(Grabbable g)
+    {
+        if (rightIK != null)
+            rightIK.target = g.rightHandle;
+
+        if (leftIK != null)
+            leftIK.target = g.leftHandle;
+    }
+
+    void SnapObjectIntoPalm(Grabbable g)
+    {
+        if (rightPalmAnchor == null || g.rightHandle == null) return;
+
+        if (g.disableGravityWhileHeld) heldRb.useGravity = false;
+
+        Vector3 deltaPos = rightPalmAnchor.position - g.rightHandle.position;
+        heldRb.position += deltaPos;
+
+        if (snapRotation)
+        {
+            Quaternion rotDelta = rightPalmAnchor.rotation * Quaternion.Inverse(g.rightHandle.rotation);
+            heldRb.rotation = rotDelta * heldRb.rotation;
+        }
+
+        heldRb.linearVelocity = Vector3.zero;
+        heldRb.angularVelocity = Vector3.zero;
     }
 
     ConfigurableJoint CreateLockedJoint(Rigidbody objectRb, Rigidbody handRb, Transform handle)
@@ -130,6 +192,7 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
         j.autoConfigureConnectedAnchor = false;
 
         j.anchor = objectRb.transform.InverseTransformPoint(handle.position);
+
         j.connectedAnchor = Vector3.zero;
 
         if (lockLinear)
@@ -165,7 +228,9 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 
     Grabbable FindNearestGrabbable()
     {
-        Vector3 origin = rightHandRb ? rightHandRb.position : transform.position;
+        Vector3 origin =
+            rightPalmAnchor ? rightPalmAnchor.position :
+            (rightHandRb ? rightHandRb.position : transform.position);
 
         var hits = Physics.OverlapSphere(origin, grabRadius, grabbableMask, QueryTriggerInteraction.Collide);
 
@@ -186,8 +251,8 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 
     void SetIKActive(bool on)
     {
-        if (rightIK != null) rightIK.active = on;
-        if (leftIK != null) leftIK.active = on;
+        if (rightIK != null) rightIK.active = false;
+        if (leftIK != null) leftIK.active = false;
     }
 
     void SetHeldCollisionIgnored(bool ignored)
@@ -204,7 +269,10 @@ public class PhysicsHandGrabber_Tether_JamInput : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        Vector3 origin = rightHandRb ? rightHandRb.position : transform.position;
+        Vector3 origin =
+            rightPalmAnchor ? rightPalmAnchor.position :
+            (rightHandRb ? rightHandRb.position : transform.position);
+
         Gizmos.DrawWireSphere(origin, grabRadius);
     }
 #endif
