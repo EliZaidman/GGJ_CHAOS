@@ -22,7 +22,7 @@ public sealed class SoundManager : MonoBehaviour
             if (_instance == null)
             {
                 // Try to find an existing one
-                _instance = FindObjectOfType<SoundManager>();
+                _instance = FindFirstObjectByType<SoundManager>();
 
                 // If still null, create a new one
                 if (_instance == null)
