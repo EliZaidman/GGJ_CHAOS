@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class AttachRigidbodyToAnother : MonoBehaviour
@@ -34,6 +34,8 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     float _originalDrag;
 
+    public bool IsHoldingSomething() => _connection != null && otherRB != null;
+    public Rigidbody CurrentHeldRigidbody() => otherRB;
     private void Awake()
     {
         _rb = GetComponentInParent<Rigidbody>();

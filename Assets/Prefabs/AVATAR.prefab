@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 3097521422500383360}
   - component: {fileID: 7024605559802756122}
   - component: {fileID: 736502525893462665}
+  - component: {fileID: 6148311059168139268}
   m_Layer: 7
   m_Name: AVATAR
   m_TagString: Untagged
@@ -81,7 +82,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2315804267961358753}
   serializedVersion: 5
-  m_Mass: 8
+  m_Mass: 50
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -171,9 +172,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_NeverAutoSwitchControlSchemes: 1
+  m_DefaultControlScheme: Gamepad
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &8012249068860970649
@@ -227,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 220bea236300e52468fa5e7ac15d836f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 6192136245934417338}
 --- !u!114 &3097521422500383360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +300,23 @@ MonoBehaviour:
   mediumDragAdd: 1
   heavyDragAdd: 3
   superHeavyDragAdd: 6
+--- !u!114 &6148311059168139268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315804267961358753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f8712d16565404a8881934979332e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  rootRB: {fileID: 3444151698174474097}
+  leftHand: {fileID: 3591686513336613281}
+  rightHand: {fileID: 7094985567233571747}
+  forwardAssistForce: 180
+  maxSpeedWhileCarrying: 6
 --- !u!1001 &8566669346772557708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -560,7 +578,7 @@ PrefabInstance:
     - target: {fileID: 4807101839547939510, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Mass
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4807101839547939510, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -641,7 +659,7 @@ PrefabInstance:
     - target: {fileID: 6377320397726083201, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Mass
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6377320397726083201, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
