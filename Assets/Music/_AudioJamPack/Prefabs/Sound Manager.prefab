@@ -53,10 +53,13 @@ MonoBehaviour:
   support3DSound: 1
   mixer: {fileID: 24100000, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
   masterGroup: {fileID: 24300002, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
-  musicGroup: {fileID: -1529705222896478591, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
-  sfxGroup: {fileID: 1215063003489759366, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  musicGroup: {fileID: -1529705222896478591, guid: 6608335029a40e145a695b1f3bb80a81,
+    type: 2}
+  sfxGroup: {fileID: 1215063003489759366, guid: 6608335029a40e145a695b1f3bb80a81,
+    type: 2}
   uiGroup: {fileID: 2321602722567678515, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
-  ambienceGroup: {fileID: -5884813227043964372, guid: 6608335029a40e145a695b1f3bb80a81, type: 2}
+  ambienceGroup: {fileID: -5884813227043964372, guid: 6608335029a40e145a695b1f3bb80a81,
+    type: 2}
   useAudioMixerRouting: 0
 --- !u!114 &6282810491050997313
 MonoBehaviour:
