@@ -6,11 +6,13 @@ public class testPhysicsMove : MonoBehaviour
     Animator _animator;
     public Transform[] bonesToReset;
     (Vector3, Quaternion)[] resets;
+    public float MaxVelocity = 10f;
 
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
         resets = new (Vector3, Quaternion)[bonesToReset.Length];
+        GetComponent<Rigidbody>().maxLinearVelocity = MaxVelocity;
     }
 
     private void Update()

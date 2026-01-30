@@ -41,6 +41,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         if (carryState == null)
             carryState = GetComponent<CarryMotorState>();
 
+        rb.constraints = new RigidbodyConstraints();
         rb.freezeRotation = true;
     }
 
