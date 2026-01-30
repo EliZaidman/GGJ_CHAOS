@@ -6,130 +6,146 @@ using UnityEngine.InputSystem;
 public class TopDownPhysicsMover3D : MonoBehaviour
 {
     [Header("Refs")]
-    [Tooltip("If empty, this will search on self, children, then parent.")]
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private CarryMotorState carryState;
 
-    [Header("Controller Feel (Slop-Friendly)")]
-    [Tooltip("Max horizontal speed (XZ).")]
+    [Header("Movement")]
     [SerializeField] private float maxSpeed = 10f;
-
-    [Tooltip("Acceleration toward desired speed when pushing stick.")]
     [SerializeField] private float acceleration = 30f;
-
-    [Tooltip("How quickly you slow down when NOT pushing stick (lower = more slide).")]
     [SerializeField] private float deceleration = 10f;
-
-    [Tooltip("Extra accel when reversing direction (helps controller turning feel).")]
     [SerializeField] private float turnAssistMultiplier = 1.8f;
-
-    [Tooltip("Radial deadzone for stick drift.")]
     [Range(0f, 0.5f)]
     [SerializeField] private float inputDeadzone = 0.20f;
 
-    [Header("Physics")]
-    [Tooltip("Keep upright / prevent tipping from collisions.")]
-    [SerializeField] private bool freezeRotation = true;
-
-    [Tooltip("If true, movement is relative to camera forward/right (good for couch co-op).")]
-    [SerializeField] private bool cameraRelative = false;
-
-    [Tooltip("Camera used for camera-relative movement. If empty, uses Camera.main.")]
-    [SerializeField] private Transform cameraTransform;
+    [Header("Rotation (Right Stick)")]
+    [SerializeField] private float rotationSpeed = 720f; // degrees/sec
+    [Range(0f, 0.5f)]
+    [SerializeField] private float lookDeadzone = 0.25f;
+    [Tooltip("If true, player rotates toward movement when right stick idle")]
+    [SerializeField] private bool fallbackRotateToMove = true;
 
     private Rigidbody rb;
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
-        if (freezeRotation)
-            rb.freezeRotation = true;
-
         if (playerInput == null)
         {
-            playerInput = GetComponent<PlayerInput>();
-            if (playerInput == null) playerInput = GetComponentInChildren<PlayerInput>(true);
-            if (playerInput == null) playerInput = GetComponentInParent<PlayerInput>();
+            playerInput = GetComponent<PlayerInput>()
+                ?? GetComponentInChildren<PlayerInput>(true)
+                ?? GetComponentInParent<PlayerInput>();
         }
 
-        if (cameraTransform == null && cameraRelative && Camera.main != null)
-            cameraTransform = Camera.main.transform;
+        if (carryState == null)
+            carryState = GetComponent<CarryMotorState>();
+
+        rb.freezeRotation = true;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        if (playerInput == null || !playerInput.user.valid)
-            return;
+        if (playerInput == null || !playerInput.user.valid) return;
 
-        int p = playerInput.playerIndex;
-        var input = JamInput.Get(p);
-        if (input == null)
-            return;
+        var input = JamInput.Get(playerInput.playerIndex);
+        if (input == null) return;
 
-        // --- Read move from your JamInput system ---
-        Vector2 raw = input.Move;
+        float speedMult = 1f;
+        bool locked = false;
 
-        // --- Radial deadzone + preserve analog magnitude (controller-first) ---
-        float mag = raw.magnitude;
-        if (mag < inputDeadzone)
+        if (carryState != null)
         {
-            raw = Vector2.zero;
-            mag = 0f;
+            speedMult = carryState.speedMultiplier;
+            locked = carryState.movementLocked;
+        }
+
+
+        Vector2 moveRaw = input.Move;
+        float moveMag = moveRaw.magnitude;
+
+        if (moveMag < inputDeadzone)
+        {
+            moveRaw = Vector2.zero;
+            moveMag = 0f;
         }
         else
         {
-            // Remap [deadzone..1] -> [0..1], keep direction
-            mag = Mathf.InverseLerp(inputDeadzone, 1f, mag);
-            raw = raw.normalized * mag;
+            moveMag = Mathf.InverseLerp(inputDeadzone, 1f, moveMag);
+            moveRaw = moveRaw.normalized * moveMag;
         }
 
-        // --- Convert input into world direction ---
-        Vector3 wishDir = new Vector3(raw.x, 0f, raw.y);
+        Vector3 wishDir = new Vector3(moveRaw.x, 0f, moveRaw.y);
+        if (wishDir.sqrMagnitude > 1f) wishDir.Normalize();
 
-        if (cameraRelative && cameraTransform != null)
+        // If movement is locked (super heavy)
+        if (locked)
         {
-            Vector3 camForward = cameraTransform.forward;
-            Vector3 camRight = cameraTransform.right;
-            camForward.y = 0f;
-            camRight.y = 0f;
-            camForward.Normalize();
-            camRight.Normalize();
-
-            wishDir = (camRight * raw.x) + (camForward * raw.y);
-        }
-
-        // Clamp for safety (should already be <= 1)
-        if (wishDir.sqrMagnitude > 1f)
-            wishDir.Normalize();
-
-        // --- Current velocity (XZ only) ---
-        Vector3 v = rb.linearVelocity;
-        Vector3 vXZ = new Vector3(v.x, 0f, v.z);
-
-        // --- Target velocity (analog magnitude already applied) ---
-        Vector3 targetVXZ = wishDir * maxSpeed;
-
-        // --- Turn assist: if reversing direction, boost accel so it feels good on stick ---
-        float rate;
-        if (wishDir.sqrMagnitude > 0f)
-        {
-            float dot = 1f;
-            if (vXZ.sqrMagnitude > 0.01f && targetVXZ.sqrMagnitude > 0.01f)
-                dot = Vector3.Dot(vXZ.normalized, targetVXZ.normalized);
-
-            float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot); // 0 = same dir, 1 = opposite dir
-            float boostedAccel = Mathf.Lerp(acceleration, acceleration * turnAssistMultiplier, turnBoost01);
-            rate = boostedAccel;
+            Vector3 v0 = rb.linearVelocity;
+            Vector3 vXZ0 = new Vector3(v0.x, 0f, v0.z);
+            Vector3 newVXZ0 = Vector3.MoveTowards(
+                vXZ0,
+                Vector3.zero,
+                deceleration * Time.fixedDeltaTime
+            );
+            rb.linearVelocity = new Vector3(newVXZ0.x, v0.y, newVXZ0.z);
         }
         else
         {
-            rate = deceleration;
+            Vector3 v = rb.linearVelocity;
+            Vector3 vXZ = new Vector3(v.x, 0f, v.z);
+
+            Vector3 targetVXZ = wishDir * (maxSpeed * speedMult);
+
+            float rate;
+            if (wishDir.sqrMagnitude > 0f)
+            {
+                float dot = (vXZ.sqrMagnitude > 0.01f && targetVXZ.sqrMagnitude > 0.01f)
+                    ? Vector3.Dot(vXZ.normalized, targetVXZ.normalized)
+                    : 1f;
+
+                float turnBoost01 = Mathf.InverseLerp(1f, -1f, dot);
+                rate = Mathf.Lerp(acceleration, acceleration * turnAssistMultiplier, turnBoost01);
+            }
+            else
+            {
+                rate = deceleration;
+            }
+
+            Vector3 newVXZ = Vector3.MoveTowards(
+                vXZ,
+                targetVXZ,
+                rate * Time.fixedDeltaTime
+            );
+
+            rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
         }
 
-        // --- Smoothly move current velocity toward target velocity ---
-        Vector3 newVXZ = Vector3.MoveTowards(vXZ, targetVXZ, rate * Time.fixedDeltaTime);
+        Vector2 lookRaw = input.Look;
+        float lookMag = lookRaw.magnitude;
 
-        // Apply back, keep Y unchanged
-        rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
+        bool usingLook = lookMag > lookDeadzone;
+
+        Vector3 lookDir = Vector3.zero;
+
+        if (usingLook)
+        {
+            lookRaw = lookRaw.normalized;
+            lookDir = new Vector3(lookRaw.x, 0f, lookRaw.y);
+        }
+        else if (fallbackRotateToMove && wishDir.sqrMagnitude > 0.01f)
+        {
+            lookDir = wishDir;
+        }
+
+        if (lookDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            Quaternion newRot = Quaternion.RotateTowards(
+                rb.rotation,
+                targetRot,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+            rb.MoveRotation(newRot);
+        }
     }
 }

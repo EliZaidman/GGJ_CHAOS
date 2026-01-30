@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class HandAnchorProxyRB : MonoBehaviour
 {
-    [SerializeField] Transform followTarget; // set to RightHand_Anchor
+    [SerializeField] Transform followTarget;
     Rigidbody rb;
 
     void Awake()

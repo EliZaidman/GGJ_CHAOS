@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: abea842c868cda540b3cb9a8abe1bc15
+guid: 1208a05bdd2895f4a93a0ec5dc3447f3
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: defaultMat
-    second: {fileID: 2100000, guid: c1c7aaafdac70ca43af48a067e297b18, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -36,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Naruto_Run
+      name: Fast Run
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 19
+      lastFrame: 16
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

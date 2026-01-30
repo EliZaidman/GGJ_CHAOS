@@ -3,15 +3,20 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class Grabbable : MonoBehaviour
 {
+    public enum CarryMode { Light, Medium, Heavy, SuperHeavy }
+
+    [Header("Carry Mode")]
+    public CarryMode carryMode = CarryMode.Light;
+
     [Header("Handling Requirement")]
-    [Tooltip("How much 'strength' is required to grab this object.")]
+    [Tooltip("Minimum strength needed to even attempt holding this.")]
     public float requiredStrength = 1f;
 
-    [Tooltip("If > 0, use this instead of Rigidbody.mass for handling checks.")]
+    [Tooltip("If > 0, this weight is used instead of Rigidbody.mass.")]
     public float overrideWeight = 0f;
 
     [Header("Optional Handle")]
-    [Tooltip("If set, the hand snaps to this point/rotation when grabbed.")]
+    [Tooltip("If set, grab happens from this point on the object.")]
     public Transform handle;
 
     [Header("While Held")]
@@ -35,9 +40,8 @@ public class Grabbable : MonoBehaviour
         }
     }
 
-    public bool CanBeHeld(float handStrength)
-    {
-        // Simple rule: you can hold it if you have enough strength.
-        return handStrength >= requiredStrength && handStrength >= Weight;
-    }
+public bool CanBeHeld(float handStrength)
+{
+    return handStrength >= requiredStrength;
+}
 }
