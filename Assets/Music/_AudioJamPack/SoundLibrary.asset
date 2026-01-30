@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SoundLibrary
   m_EditorClassIdentifier: 
   cues:
-  - {fileID: 11400000, guid: 00a149caf89b8b942bb4085dd32512f9, type: 2}
-  - {fileID: 11400000, guid: 266b3b1ba7f2fa844a435c4b0933b415, type: 2}
-  - {fileID: 11400000, guid: 3dd0a5ea6619fe24f859f1b4375b209d, type: 2}
+  - {fileID: 11400000, guid: bab14d9f3d7c78f4ab985a456cecd730, type: 2}
   - {fileID: 11400000, guid: 8c8ce804a5e270246b22bffb6b09252a, type: 2}
+  - {fileID: 11400000, guid: 4d8e3c3186d8f5a4ea2b663cde625f97, type: 2}
   - {fileID: 11400000, guid: ef5879be5eb4d7f42aad9e7128c34e6d, type: 2}
+  - {fileID: 11400000, guid: 0b1e05ab045c9fd44abd3f4131bc6fb2, type: 2}
