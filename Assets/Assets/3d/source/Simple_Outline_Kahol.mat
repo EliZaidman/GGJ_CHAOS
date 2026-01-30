@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Simple_Outline
+  m_Name: Simple_Outline_Kahol
   m_Shader: {fileID: -6465566751694194690, guid: ded82a4919d9e274fa27d7171ac77adf,
     type: 3}
   m_Parent: {fileID: 0}
@@ -56,6 +56,6 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 0.56371903, g: 0.009077947, b: 0.6415094, a: 1}
+    - _Color: {r: 0, g: 0.14370199, b: 0.5377358, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
