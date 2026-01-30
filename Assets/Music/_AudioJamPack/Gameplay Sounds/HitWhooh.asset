@@ -21,9 +21,9 @@ MonoBehaviour:
   volume: 1
   cooldownSeconds: 0
   loop: 0
-  randomizePitch: 0
-  pitchMin: 0.79
+  randomizePitch: 1
+  pitchMin: 1
   pitchMax: 2
-  use3DWhenPositional: 0
+  use3DWhenPositional: 1
   minDistance: 1
   maxDistance: 25
