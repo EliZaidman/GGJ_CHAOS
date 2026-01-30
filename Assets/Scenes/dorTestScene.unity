@@ -185,37 +185,27 @@ PrefabInstance:
     - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: maxSpeed
-      value: 7
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: acceleration
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
       propertyPath: deceleration
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 4394956588905977386, guid: 56e088029edaf5945a29772b4b029634,
+    - target: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
         type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: -5668984478841134232, guid: 29c9bfd89f5b9b24c950e518c022deff,
-        type: 3}
-    - target: {fileID: 6597745341238390949, guid: 56e088029edaf5945a29772b4b029634,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: rotationSpeed
+      value: 450
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2315804267961358753, guid: 56e088029edaf5945a29772b4b029634,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1327041857}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56e088029edaf5945a29772b4b029634, type: 3}
 --- !u!1 &268342331
 GameObject:
@@ -548,37 +538,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1327041847 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2315804267961358753, guid: 56e088029edaf5945a29772b4b029634,
-    type: 3}
-  m_PrefabInstance: {fileID: 255443009}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1327041852 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2872840054049017787, guid: 56e088029edaf5945a29772b4b029634,
-    type: 3}
-  m_PrefabInstance: {fileID: 255443009}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327041847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a7d3deeb8465774ca39fdca9f3c7e2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TopDownPhysicsMover3D
---- !u!114 &1327041857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1327041847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cff7946400caf164eb09236ec47f3424, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  PhysicsMover3D: {fileID: 1327041852}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
