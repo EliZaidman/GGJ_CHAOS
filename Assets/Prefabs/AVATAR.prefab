@@ -81,8 +81,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2315804267961358753}
   serializedVersion: 5
-  m_Mass: 50
-  m_LinearDamping: 1
+  m_Mass: 8
+  m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -97,8 +97,8 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
+  m_Interpolate: 1
+  m_Constraints: 32
   m_CollisionDetection: 1
 --- !u!136 &3724510793764493741
 CapsuleCollider:
@@ -395,7 +395,7 @@ PrefabInstance:
     - target: {fileID: 325579854424825129, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Mass
-      value: 15
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 325579854424825129, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -405,12 +405,12 @@ PrefabInstance:
     - target: {fileID: 325579854424825129, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LinearDamping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 325579854424825129, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_AngularDamping
-      value: 1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 325579854424825129, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -520,7 +520,7 @@ PrefabInstance:
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Mass
-      value: 15
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -530,12 +530,12 @@ PrefabInstance:
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_LinearDamping
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_AngularDamping
-      value: 1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 3371091251617779903, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -1063,16 +1063,15 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   Highlight: {r: 0, g: 1, b: 1, a: 1}
-  otherSystemsInContext:
-  - {fileID: 7094985567233571747}
-  Force: 100
-  Damping: 14
-  MaxPullForce: 650
-  SnapDistance: 0.25
-  ForceMode: 0
+  DefaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   GrabPoint: {fileID: 197858514982409952}
+  Force: 45
+  Damping: 14
+  MaxPullForce: 350
+  SnapDistance: 0.25
   HeldExtraDrag: 4
-  RemoveVerticalPull: 1
+  JointBreakForce: 6000
+  ForceMode: 0
 --- !u!135 &2470093606563088877
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1314,16 +1313,15 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   Highlight: {r: 0.1921128, g: 1, b: 0, a: 1}
-  otherSystemsInContext:
-  - {fileID: 3591686513336613281}
-  Force: 100
-  Damping: 14
-  MaxPullForce: 650
-  SnapDistance: 0.25
-  ForceMode: 0
+  DefaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   GrabPoint: {fileID: 4577985603031021278}
+  Force: 45
+  Damping: 14
+  MaxPullForce: 350
+  SnapDistance: 0.25
   HeldExtraDrag: 4
-  RemoveVerticalPull: 1
+  JointBreakForce: 6000
+  ForceMode: 0
 --- !u!135 &613392383129807917
 SphereCollider:
   m_ObjectHideFlags: 0
