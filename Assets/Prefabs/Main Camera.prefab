@@ -28,11 +28,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1606683060858215460}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3748666, y: -0.4184859, z: 0.19514282, w: 0.8039054}
+  m_LocalRotation: {x: 0.37486696, y: -0.41848636, z: 0.19514337, w: 0.80390483}
   m_LocalPosition: {x: -5.93, y: 9.32, z: -13.66}
   m_LocalScale: {x: 1.8, y: 1.8, z: 1.8000001}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3473031609007457163}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -55, z: 0}
 --- !u!20 &3820342837048580457
@@ -148,8 +149,8 @@ PositionConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 1
-  m_TranslationAtRest: {x: -5.93, y: 9.32, z: -13.66}
-  m_TranslationOffset: {x: 5.78, y: 9.32, z: -4.29}
+  m_TranslationAtRest: {x: -25.228329, y: 9.32, z: -52.43344}
+  m_TranslationOffset: {x: 5.7800007, y: 9.32, z: -4.290001}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -158,3 +159,40 @@ PositionConstraint:
   m_Sources:
   - sourceTransform: {fileID: 0}
     weight: 1
+  - sourceTransform: {fileID: 0}
+    weight: 2
+  - sourceTransform: {fileID: 0}
+    weight: 3
+  - sourceTransform: {fileID: 0}
+    weight: 4
+--- !u!1 &7229250029591156471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3473031609007457163}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3473031609007457163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7229250029591156471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.47, z: 4.13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7194319959241236869}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
