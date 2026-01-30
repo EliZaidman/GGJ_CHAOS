@@ -55,7 +55,7 @@ public class SoundManagerEditor : Editor
 
         // Core settings
         EditorGUILayout.LabelField("Core Settings", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(defaultFadeProp,   new GUIContent("Default Music Fade (s)"));
+        //EditorGUILayout.PropertyField(defaultFadeProp,   new GUIContent("Default Music Fade (s)"));
         EditorGUILayout.PropertyField(support3DProp,     new GUIContent("Support 3D SFX"));
         EditorGUILayout.PropertyField(sfxPoolSizeProp,   new GUIContent("2D SFX Pool Size"));
         EditorGUILayout.PropertyField(sfx3dPoolSizeProp, new GUIContent("3D SFX Pool Size"));

@@ -1,16 +1,20 @@
+using System;
 using UnityEngine;
 
 public class PlayHitSound : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnCollisionEnter(Collision other)
     {
-        
+        if (other.gameObject.tag == "Player")
+          //  SoundManager.PlayAt(SoundId.HitWhooh, other.transform.position);
+        print("ben is a cool guy overall");
+     //   SoundManager.PlayAt(SoundId., hitPos); 
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F1)){
+            print("f11");
+            SoundManager.PlayAt(SoundId.HitWhooh, transform.position);}
     }
 }
