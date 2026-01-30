@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: de96a63070116814d9041fac69f18fd3
+guid: 4f9873aaede6f7f4eb52451165fb4625
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -14,17 +14,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Plastic
     second: {fileID: 2100000, guid: 767bfc490b60c24409dd9072e00bf5f9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Safe_Metal_mat
-    second: {fileID: 2100000, guid: f2de5960713c39a4aa73418dfce9bd0e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Shelf_mat
-    second: {fileID: -8913996040187986841, guid: 80dfbffdc5e024249ac824754dc1c5fa,
-      type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -60,10 +49,10 @@ ModelImporter:
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
-    importVisibility: 1
-    importBlendShapes: 1
-    importCameras: 1
-    importLights: 1
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -123,7 +112,7 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
-  importBlendShapeDeformPercent: 1
+  importBlendShapeDeformPercent: 0
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
