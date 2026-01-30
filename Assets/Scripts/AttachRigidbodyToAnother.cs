@@ -14,17 +14,17 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     public Color DefaultColor = Color.gray;
 
     [Header("Optional snap point (child near palm)")]
-    public Transform GrabPoint; // assign RightGrabPoint / LeftGrabPoint if you want palm snap
+    public Transform GrabPoint;
 
     [Header("Pull (only while NOT latched)")]
-    public float Force = 50f;             // spring strength
-    public float Damping = 10f;           // kills rubber banding
-    public float MaxPullForce = 700f;     // clamp
-    public float SnapDistance = 0.25f;    // when close, create joint
+    public float Force = 50f;
+    public float Damping = 10f;
+    public float MaxPullForce = 700f;
+    public float SnapDistance = 0.25f;
 
     [Header("Hold Stabilizers")]
-    public float HeldExtraDrag = 3f;      // add drag to held object while held
-    public float JointBreakForce = 6000f; // break instead of exploding
+    public float HeldExtraDrag = 3f;
+    public float JointBreakForce = 6000f;
 
     public ForceMode ForceMode = ForceMode.Force;
 
@@ -34,11 +34,18 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     float _originalDrag;
 
+    Transform _selfRoot; // used to block self-grab
+    PlayerInput _selfPlayerInput;
+
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
     public Rigidbody CurrentHeldRigidbody() => otherRB;
+
     private void Awake()
     {
         _rb = GetComponentInParent<Rigidbody>();
+        _selfRoot = _rb != null ? _rb.transform.root : transform.root;
+        _selfPlayerInput = GetComponentInParent<PlayerInput>();
+
         grab.Enable();
     }
 
@@ -46,7 +53,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         float g = grab.ReadValue<float>();
 
-        // RELEASE ALWAYS (not only during collision)
+        // RELEASE
         if (_connection != null && g <= 0.05f)
         {
             Destroy(_connection);
@@ -59,7 +66,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         if (otherRB == null) return;
         if (g <= 0.05f) return;
 
-        // If already holding with this hand, do NOT keep pulling (coop rubber-band fix)
+        // already holding with this hand
         if (_connection != null) return;
 
         Vector3 grabPos = (GrabPoint != null) ? GrabPoint.position : _rb.worldCenterOfMass;
@@ -68,20 +75,15 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         Vector3 delta = targetPos - grabPos;
         float dist = delta.magnitude;
 
-        // If close enough, latch now (no collision timing needed)
         if (dist <= SnapDistance)
         {
             Latch();
             return;
         }
 
-        // Pull toward target (spring + damping)
         Vector3 dir = (dist > 0.0001f) ? (delta / dist) : Vector3.zero;
 
-        // spring proportional to distance
         float spring = Force * dist;
-
-        // damp relative velocity along the pull direction
         float relVel = Vector3.Dot((_rb.linearVelocity - otherRB.linearVelocity), dir);
 
         float f = spring - (Damping * relVel);
@@ -89,10 +91,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         Vector3 pull = dir * f * g;
 
-        // IMPORTANT: remove vertical pull to prevent levitation/climbing
+        // keep it ground-y (no levitation)
         pull.y = 0f;
 
-        // If extremely close / intersecting, don't pull � latch instead (prevents solver pop)
         if (dist <= SnapDistance * 0.8f)
         {
             Latch();
@@ -103,21 +104,42 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         otherRB.AddForce(-pull * 0.5f, ForceMode);
     }
 
+    bool CanTarget(Rigidbody candidate)
+    {
+        if (candidate == null) return false;
+        if (candidate.isKinematic) return false;
+        if (candidate == _rb) return false;
+
+        // If the candidate belongs to the same PlayerInput as this hand -> it's self
+        if (_selfPlayerInput != null)
+        {
+            var otherPI = candidate.GetComponentInParent<PlayerInput>();
+            if (otherPI != null && otherPI == _selfPlayerInput)
+                return false;
+        }
+
+        return true;
+    }
+
     void Latch()
     {
         if (_connection != null) return;
         if (otherRB == null) return;
 
-        // Multi-hand friendly: each hand adds its own joint component to the object
+        // extra safety (in case otherRB was set somehow)
+        if (!CanTarget(otherRB))
+        {
+            otherRB = null;
+            return;
+        }
+
         _connection = otherRB.gameObject.AddComponent<FixedJoint>();
         _connection.connectedBody = _rb;
         _connection.enableCollision = false;
 
-        // Break instead of infinite fight
         _connection.breakForce = JointBreakForce;
         _connection.breakTorque = JointBreakForce;
 
-        // Add drag while held to reduce jitter
         _originalDrag = otherRB.linearDamping;
         otherRB.linearDamping = Mathf.Max(_originalDrag, HeldExtraDrag);
     }
@@ -125,12 +147,12 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     // highlight targets
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody == null) return;
-        if (other.attachedRigidbody.isKinematic) return;
+        var cand = other.attachedRigidbody;
+        if (!CanTarget(cand)) return;
 
-        if (otherRB == null)
+        if (otherRB == null && _connection == null)
         {
-            otherRB = other.attachedRigidbody;
+            otherRB = cand;
 
             _mr = otherRB.GetComponent<MeshRenderer>();
             if (_mr != null && _mr.material != null)
@@ -146,8 +168,10 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         if (other.attachedRigidbody != null && other.attachedRigidbody == otherRB)
         {
-            // Only restore color if this hand is not currently holding
-            if (_connection == null && _hasColor && _mr != null && _mr.material != null)
+            // If we're holding, keep the reference (don’t drop target just because collider left trigger)
+            if (_connection != null) return;
+
+            if (_hasColor && _mr != null && _mr.material != null)
                 _mr.material.color = _originalColor;
 
             _mr = null;
@@ -158,7 +182,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Keep your original pattern, but it's not required anymore
         if (_connection != null) return;
         if (otherRB == null) return;
 
@@ -168,7 +191,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        // harmless fallback
         if (_connection != null && grab.ReadValue<float>() <= 0.05f)
         {
             Destroy(_connection);
@@ -179,7 +201,6 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     private void OnJointBreak(float breakForce)
     {
-        // If it breaks because two players pull opposite directions
         _connection = null;
         if (otherRB != null) otherRB.linearDamping = _originalDrag;
     }
