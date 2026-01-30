@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class AnimationRelay : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public TopDownPhysicsMover3D PhysicsMover3D;
+
+    Animator _animator;
+
+    private void Awake()
     {
-        
+        _animator = GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        _animator.SetFloat("Speed", PhysicsMover3D.LinearNormalizedSpeed);
     }
 }
