@@ -14,20 +14,10 @@ public class SoundTest : MonoBehaviour
         if (playTemplateMusicOnStart)
         {
             //Debug.Log("[SoundTest] SoundManager instance: " + (SoundManager.Instance != null));
-            SoundManager.PlayMusic(SoundId.music1);
+            //SoundManager.PlayMusic(SoundId.music1);
         }
     }
 
-    private void Update()
-    {
-        if (!playTemplateSfxOnSpace) return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SoundManager.Play(SoundId.SFX1);
-            //Debug.Log("[SoundTest] Playing SFX1");
-        }
-    }
 }
 
 // for 3d sounds
