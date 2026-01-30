@@ -647,7 +647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   bensVault: {fileID: 3293656645394503291}
-  hinge: {fileID: 0}
+  hinge: {fileID: 1046107751436989320}
   unlockedWheel: 0
   requiredRightSpins: 2
   spamDebug: 1
