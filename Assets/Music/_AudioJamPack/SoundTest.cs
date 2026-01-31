@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 
 public class SoundTest : MonoBehaviour
 {
@@ -15,6 +16,17 @@ public class SoundTest : MonoBehaviour
     {
         if (playTemplateMusicOnStart)
         {
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            if (currentSceneIndex == 0)
+            {
+                SoundManager.PlayMusic(SoundId.Lobby);
+            }
+            else
+            {
+                SoundManager.PlayMusic(SoundId.music1);
+            }
+
+            //SoundManager.PlayMusic(SoundId.);
             Debug.Log("[SoundTest] SoundManager instance: " + (SoundManager.Instance != null));
             SoundManager.PlayMusic(SoundId.music1);
         }
