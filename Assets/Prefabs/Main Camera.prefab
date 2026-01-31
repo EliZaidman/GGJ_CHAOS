@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3194289943210919797}
   - component: {fileID: 9183258662258362214}
   - component: {fileID: 2817578351909650576}
-  - component: {fileID: 728913472975724754}
+  - component: {fileID: 7803354008216245082}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -148,7 +148,7 @@ PositionConstraint:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1606683060858215460}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: -25.228329, y: 9.32, z: -52.43344}
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4ca2bed911dcd4c80eee666a5ffba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
---- !u!114 &728913472975724754
+--- !u!114 &7803354008216245082
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,14 +188,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1606683060858215460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4dda8cdc46631c46bdd7f1acf846c8a, type: 3}
+  m_Script: {fileID: 11500000, guid: ce10d6fb0ec140c4abf57a4f2824723c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  Follow:
+  positionConstraint: {fileID: 0}
+  startDelay: 2
+  introCam: {fileID: 3820342837048580457}
+  points:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  gameplayRoot: {fileID: 0}
+  totalDuration: 9
+  ease: 2
+  gameplayCamTarget: {fileID: 7194319959241236869}
+  playOnStart: 1
 --- !u!1 &7229250029591156471
 GameObject:
   m_ObjectHideFlags: 0
