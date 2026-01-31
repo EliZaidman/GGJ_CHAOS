@@ -30,7 +30,7 @@ public class CameraFollower : MonoBehaviour
 
         if (dist > 13f)
         {
-            transform.position = new Vector3(transform.position.x, Mathf.Max(originalY + dist -13, 20), transform.position.z);
+            transform.position = new Vector3(transform.position.x, Mathf.Min(originalY + dist -13, 20), transform.position.z);
         }
         else
             transform.position = new Vector3(transform.position.x, originalY, transform.position.z);
