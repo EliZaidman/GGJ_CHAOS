@@ -5,16 +5,28 @@ using UnityEngine;
 
 public class WinLoseConditions : MonoBehaviour
 {
-    public float TimeForGameInSeconds = 60 * 4;
+    public int TimeForGameInSeconds = 60 * 4;
     public TMP_Text TimerText;
     public TMP_Text ScoreText;
 
-    public float Score = 0;
+    private float score = 0;
 
     public float CurrentTime = 0;
 
+    public float Score
+    {
+        get => score;
+        set
+        {
+            ScoreText.text = score.ToString() + "$";
+            score = value;
+        }
+    }
+
     private void Awake()
     {
+        score = 0;
+        ScoreText.text = score.ToString() + "$";
         StartCoroutine(TimerRoutine());
     }
 
@@ -23,9 +35,16 @@ public class WinLoseConditions : MonoBehaviour
         CurrentTime = TimeForGameInSeconds;
         while (CurrentTime > 0)
         {
-            TimerText.text = CurrentTime.ToString("mm:ss");
+            TimerText.text = CurrentTime.ToString(FormatMMSS((int)CurrentTime));
             CurrentTime -= Time.deltaTime;
             yield return null;
+        }
+
+        string FormatMMSS(int totalSeconds)
+        {
+            int m = totalSeconds / 60;
+            int s = totalSeconds % 60;
+            return $"{m:##}:{s:##}";
         }
     }
 
