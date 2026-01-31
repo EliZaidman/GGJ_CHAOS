@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +11,7 @@ public class WinLoseConditions : MonoBehaviour
     public int TimeForGameInSeconds = 60 * 4;
     public TMP_Text TimerText;
     public TMP_Text ScoreText;
+    public TMP_Text EndScoreText;
     public GameObject WinScreen;
 
     private float score = 0;
@@ -20,6 +20,7 @@ public class WinLoseConditions : MonoBehaviour
 
     HashSet<GameObject> _found = new HashSet<GameObject>(100);
 
+
     public float Score
     {
         get => score;
@@ -27,9 +28,15 @@ public class WinLoseConditions : MonoBehaviour
         {
             ScoreText.text = score.ToString() + "$";
             score = value;
+
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            QuitGame();
+    }
     private void Awake()
     {
         score = 0;
@@ -50,6 +57,7 @@ public class WinLoseConditions : MonoBehaviour
         GetComponent<AudioSource>().Play();
         WinScreen.SetActive(true);
         WinScreen.GetComponentInChildren<Button>().onClick.AddListener(() => SceneManager.LoadScene(0));
+        EndScoreText.text = score.ToString() + "$";
 
         string FormatMMSS(int totalSeconds)
         {
@@ -65,7 +73,7 @@ public class WinLoseConditions : MonoBehaviour
             return;
 
         _found.Add(other.gameObject);
-        
+
         if (other.TryGetComponent(out ScoreEntity score))
         {
             Score += score.Score;
@@ -75,5 +83,24 @@ public class WinLoseConditions : MonoBehaviour
             Score += 1;
             Debug.LogWarning("Score item registered without score entity component.");
         }
+    }
+    public void RestartLevel()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
+    }
+
+    public void MainScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

@@ -1667,6 +1667,11 @@ PrefabInstance:
       propertyPath: OutlineMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 8fe2e249195a9ed4393b84eb49ac54e2, type: 2}
+    - target: {fileID: 3141710118674417903, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 3656898907413088542, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: OutlineMaterial
@@ -13971,6 +13976,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Grass
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405233573056937751, guid: c127a48242e3c764d972c68ccbd6f1a9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3627406296609535326, guid: c127a48242e3c764d972c68ccbd6f1a9,
         type: 3}
