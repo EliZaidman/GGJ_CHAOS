@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
+
 
 public class AttachRigidbodyToAnother : MonoBehaviour
 {
@@ -243,7 +245,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     {
         float speed = _rb.linearVelocity.magnitude;
 
-        BensHitFreezeInElisCode(speed);
+        BensHitFreezeInElisCode(speed); // ben
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
 
@@ -265,14 +267,38 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         RefreshHighlightTimer();
     }
 
-    private void BensHitFreezeInElisCode(float speed)
+    private void BensHitFreezeInElisCode(float speed) // ben
     {
         if (speed > freezeVelocityThreshold)
         {
             cooldownTimer = cooldown;
 
-            
             BensHitFreezelHitFreezeusing.Freeze(0.05f);
+
+            float strength = Mathf.Clamp(speed / 25f, 0.3f, 1f);
+            TryRumble(strength, 0.1f);
+        }
+    }
+
+    private void TryRumble(float intensity, float duration) // ben
+    {
+        if (Gamepad.all.Count == 0) return;
+
+        foreach (var pad in Gamepad.all)
+        {
+            pad.SetMotorSpeeds(intensity, intensity);
+        }
+
+        StartCoroutine(StopRumbleAfter(duration));
+    }
+
+    private System.Collections.IEnumerator StopRumbleAfter(float duration) // ben
+    {
+        yield return new WaitForSecondsRealtime(duration);
+
+        foreach (var pad in Gamepad.all)
+        {
+            pad.SetMotorSpeeds(0f, 0f);
         }
     }
 
