@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 738367410165205721}
   m_Layer: 0
-  m_Name: 'Camera Sequence Mid Point '
+  m_Name: Camera sequence point 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 792726091578705905}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3748666, y: -0.4184859, z: 0.19514282, w: 0.8039054}
-  m_LocalPosition: {x: -4.7956033, y: 16.254988, z: -33.174084}
+  m_LocalPosition: {x: -5.72, y: 14.91, z: -32.53}
   m_LocalScale: {x: 1.8, y: 1.8, z: 1.8000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8000702212889624617}
   m_Layer: 0
-  m_Name: Camera Sequence end Point
+  m_Name: Camera sequence point 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,6 +94,7 @@ Transform:
   - {fileID: 8000702212889624617}
   - {fileID: 738367410165205721}
   - {fileID: 6786374075049659357}
+  - {fileID: 3649163297662984689}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6140592399007302936
@@ -106,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6786374075049659357}
   m_Layer: 0
-  m_Name: Camera Sequence start Point 1
+  m_Name: Camera sequence point 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,9 +122,40 @@ Transform:
   m_GameObject: {fileID: 6140592399007302936}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3748666, y: -0.4184859, z: 0.19514282, w: 0.8039054}
-  m_LocalPosition: {x: 5.9617076, y: 20.038044, z: 13.462784}
+  m_LocalPosition: {x: -0.04, y: 11.3, z: 17.67}
   m_LocalScale: {x: 1.8, y: 1.8, z: 1.8000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1596899674230415628}
   m_LocalEulerAnglesHint: {x: 50, y: -55, z: 0}
+--- !u!1 &8967023283254301215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3649163297662984689}
+  m_Layer: 0
+  m_Name: Camera sequence point 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3649163297662984689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8967023283254301215}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.32663444, y: -0.6294382, z: 0.32996094, w: 0.62309176}
+  m_LocalPosition: {x: 2.66, y: 10.88, z: 26.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1596899674230415628}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
