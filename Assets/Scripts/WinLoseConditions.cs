@@ -55,7 +55,7 @@ public class WinLoseConditions : MonoBehaviour
         {
             int m = totalSeconds / 60;
             int s = totalSeconds % 60;
-            return $"{m:##}:{s:##}";
+            return $"{m:00}:{s:00}";
         }
     }
 
