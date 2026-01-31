@@ -79,11 +79,7 @@ public class RoundIntroFlyover : MonoBehaviour
 
                 yield return null;
             }
-            if (positionConstraint)
-            {
-                positionConstraint.constraintActive = true;
-                
-            }
+            
 
         }
 
@@ -94,7 +90,11 @@ public class RoundIntroFlyover : MonoBehaviour
         if (gameplayRoot) gameplayRoot.SetActive(true);
 
         _running = false;
-        
+        if (positionConstraint)
+        {
+            positionConstraint.enabled = true;
+                
+        }
        
     }
 
