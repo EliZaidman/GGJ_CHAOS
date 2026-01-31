@@ -1,23 +1,23 @@
 ﻿// AUTO-GENERATED. Do not edit by hand.
-// Generated at: 2026-01-31 04:22:20
+// Generated at: 2026-01-31 11:36:29
 // Source of truth: SoundLibrary.cues (auto-filled from all SoundCues in project).
 
 public enum SoundId
 {
     BubbleImpact = 0,
-    VictoryYAY = 1,
-    CountToRoundStart = 2,
-    Explosion = 3,
-    GlassBreak = 4,
-    HitWhooh = 5,
-    ImpactMetal = 6,
-    JumpAirWhoosh = 7,
-    JumpCharacterWee = 8,
-    MoneyGained = 9,
-    MoneyGained_2 = 10,
-    Lobby = 11,
-    music1 = 12,
-    RoundStart = 13,
-    UIClick = 14,
+    CountToRoundStart = 1,
+    Explosion = 2,
+    GlassBreak = 3,
+    HitWhooh = 4,
+    ImpactMetal = 5,
+    JumpAirWhoosh = 6,
+    JumpCharacterWee = 7,
+    MoneyGained = 8,
+    MoneyGained_2 = 9,
+    Lobby = 10,
+    music1 = 11,
+    RoundStart = 12,
+    UIClick = 13,
+    VictoryMexico = 14,
     WallBreak = 15,
 }
