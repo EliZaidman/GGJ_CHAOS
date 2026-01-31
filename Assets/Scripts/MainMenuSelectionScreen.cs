@@ -47,8 +47,8 @@ public class MainMenuSelectionScreen : MonoBehaviour
     public void PlayerLeftHandler(PlayerInput input)
     {
         Debug.Log("Player " + index + " left");
+        index--;
         enable[index].SetActive(true);
         disable[index].SetActive(false);
-        index--;
     }
 }
