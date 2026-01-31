@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6674301915081342778}
   - component: {fileID: 6944207224407602951}
   - component: {fileID: 8382955887343659508}
+  - component: {fileID: -6724264410457086509}
   m_Layer: 0
   m_Name: Radio
   m_TagString: Untagged
@@ -143,3 +144,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.7566061, y: 0.2626058, z: 0.51169187}
   m_Center: {x: 0, y: -0.006822422, z: -0.09415414}
+--- !u!114 &-6724264410457086509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6619519010868702241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dae56666c790c247a99fc6c2891bf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
+  Score: 5
