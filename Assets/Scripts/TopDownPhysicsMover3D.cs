@@ -19,6 +19,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
 
     public Transform JumpRaycast;
     public LayerMask JumpLM;
+    public int jumpForce = 5;
 
     [Header("Rotation (Right Stick)")]
     [SerializeField] private float rotationSpeed = 720f; // degrees/sec
@@ -65,11 +66,12 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         }
 
         // JUMP
-        bool jump = input.JumpUp;
+        bool jump = input.JumpDown;
 
-        if (Physics.Raycast(JumpRaycast.position, Vector3.down, 0.06f, JumpLM))
+        if (jump && Physics.Raycast(JumpRaycast.position, Vector3.down, 0.1f, JumpLM))
         {
-
+            Debug.Log("JMP");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         }
 
         Vector2 moveRaw = input.Move;

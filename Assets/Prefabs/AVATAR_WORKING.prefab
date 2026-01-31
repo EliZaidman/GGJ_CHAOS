@@ -113,6 +113,11 @@ MonoBehaviour:
   deceleration: 2
   turnAssistMultiplier: 1.8
   inputDeadzone: 0.15
+  JumpRaycast: {fileID: 5359413053807908198}
+  JumpLM:
+    serializedVersion: 2
+    m_Bits: 32768
+  jumpForce: 100
   rotationSpeed: 450
   lookDeadzone: 0.25
   fallbackRotateToMove: 1
