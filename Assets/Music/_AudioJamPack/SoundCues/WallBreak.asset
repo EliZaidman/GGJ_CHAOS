@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overrideIdName: WallBreak
   bus: 1
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 86efd5926fe1d394c9a1a0f127cea73f, type: 3}
   volume: 1
   cooldownSeconds: 0
   loop: 0
-  randomizePitch: 1
+  randomizePitch: 0
   pitchMin: 1
-  pitchMax: 2
+  pitchMax: 1
   use3DWhenPositional: 1
   minDistance: 1
   maxDistance: 25

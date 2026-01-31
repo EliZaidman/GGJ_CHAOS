@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a63cd73e420cce48a877f4afc28374c, type: 3}
-  m_Name: BubbleImpact
+  m_Name: JumpCharacterWee
   m_EditorClassIdentifier: 
-  overrideIdName: BubbleImpact
+  overrideIdName: JumpCharacterWee
   bus: 1
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: c9ed94f233927fe4eb9eb042298d8271, type: 3}
   volume: 1
   cooldownSeconds: 0
   loop: 0
