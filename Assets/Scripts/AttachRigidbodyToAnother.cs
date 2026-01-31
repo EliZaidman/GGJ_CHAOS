@@ -72,7 +72,12 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     float _originalDrag;
     float _lastSawTargetTime;
-
+    
+    public float freezeVelocityThreshold = 16f;
+    public float cooldown = 0.2f;
+    float cooldownTimer;
+    
+    
     // Compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
     public Rigidbody CurrentHeldRigidbody() => otherRB;
@@ -236,6 +241,9 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        float speed = _rb.linearVelocity.magnitude;
+
+        BensHitFreezeInElisCode(speed);
         var cand = other.attachedRigidbody;
         if (!CanTarget(cand)) return;
 
@@ -255,6 +263,17 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
         ApplyTargetVisuals(otherRB);
         RefreshHighlightTimer();
+    }
+
+    private void BensHitFreezeInElisCode(float speed)
+    {
+        if (speed > freezeVelocityThreshold)
+        {
+            cooldownTimer = cooldown;
+
+            
+            BensHitFreezelHitFreezeusing.Freeze(0.05f);
+        }
     }
 
     void OnTriggerStay(Collider other)
