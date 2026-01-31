@@ -223,7 +223,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
         _connection = otherRB.gameObject.AddComponent<FixedJoint>();
         _connection.connectedBody = _rb;
         _connection.enableCollision = false;
-
+        BensCameraShake.Instance.Shake(0.12f, 0.12f); // ben
         _connection.breakForce = JointBreakForce;
         _connection.breakTorque = JointBreakForce;
 
@@ -293,6 +293,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     void OnJointBreak(float breakForce)
     {
         _connection = null;
+        BensCameraShake.Instance.Shake(0.18f, 0.22f);// ben
 
         if (otherRB != null)
             otherRB.linearDamping = _originalDrag;

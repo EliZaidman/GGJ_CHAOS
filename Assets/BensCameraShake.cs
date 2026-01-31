@@ -27,5 +27,6 @@ public class BensCameraShake : MonoBehaviour
             yield return null;
         }
         transform.localPosition = originalPos;
+      
     }
 }
