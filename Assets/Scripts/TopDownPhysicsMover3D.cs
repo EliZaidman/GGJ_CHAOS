@@ -17,6 +17,9 @@ public class TopDownPhysicsMover3D : MonoBehaviour
     [Range(0f, 0.5f)]
     [SerializeField] private float inputDeadzone = 0.20f;
 
+    public Transform JumpRaycast;
+    public LayerMask JumpLM;
+
     [Header("Rotation (Right Stick)")]
     [SerializeField] private float rotationSpeed = 720f; // degrees/sec
     [Range(0f, 0.5f)]
@@ -61,6 +64,13 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             locked = carryState.movementLocked;
         }
 
+        // JUMP
+        bool jump = input.JumpUp;
+
+        if (Physics.Raycast(JumpRaycast.position, Vector3.down, 0.06f, JumpLM))
+        {
+
+        }
 
         Vector2 moveRaw = input.Move;
         float moveMag = moveRaw.magnitude;
