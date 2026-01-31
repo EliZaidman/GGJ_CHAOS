@@ -1139,7 +1139,7 @@ MonoBehaviour:
   ownerPlayerInput: {fileID: 6192136245934417338}
   grabActionName: GrabRight
   otherRB: {fileID: 0}
-  highlightMode: 1
+  highlightMode: 2
   Highlight: {r: 0, g: 1, b: 1, a: 1}
   OutlineMaterial: {fileID: 0}
   HighlightLifetime: 0.25
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   ownerPlayerInput: {fileID: 6192136245934417338}
   grabActionName: GrabLeft
   otherRB: {fileID: 0}
-  highlightMode: 1
+  highlightMode: 2
   Highlight: {r: 0, g: 1, b: 0.09951186, a: 1}
   OutlineMaterial: {fileID: 0}
   HighlightLifetime: 0.25
