@@ -19608,6 +19608,31 @@ PrefabInstance:
       propertyPath: 'points.Array.data[3]'
       value: 
       objectReference: {fileID: 319870319}
+    - target: {fileID: 8803298158822445952, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: Follow.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8803298158822445952, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: 'Follow.Array.data[0]'
+      value: 
+      objectReference: {fileID: 992444018}
+    - target: {fileID: 8803298158822445952, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: 'Follow.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1250516350}
+    - target: {fileID: 8803298158822445952, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: 'Follow.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1404323195}
+    - target: {fileID: 8803298158822445952, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: 'Follow.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1404323195}
     - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
       propertyPath: m_Enabled
