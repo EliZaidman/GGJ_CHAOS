@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 5094919113086080230}
   - component: {fileID: 5566550679031992225}
   - component: {fileID: 8438022216932298094}
-  m_Layer: 0
+  - component: {fileID: 9154127997346588712}
+  - component: {fileID: -5089414140491860421}
+  m_Layer: 11
   m_Name: Block_O'_Gold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,3 +142,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &9154127997346588712
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655206975942713278}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2530284, y: 0.106319375, z: 0.064823605}
+  m_Center: {x: 0, y: 0, z: 0.033455413}
+--- !u!114 &-5089414140491860421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655206975942713278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dae56666c790c247a99fc6c2891bf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
+  Score: 50

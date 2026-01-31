@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 4283329135488522313}
   - component: {fileID: 3306205494231634267}
   - component: {fileID: 5292846599658310475}
-  m_Layer: 0
+  - component: {fileID: 2451050560276860416}
+  - component: {fileID: -4552108044367056369}
+  m_Layer: 11
   m_Name: Money_Roll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,3 +143,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &2451050560276860416
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4970291964280435624}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.3174622, y: 0.31746233, z: 0.44927227}
+  m_Center: {x: 0, y: 0.00000008940699, z: 1.2705494e-21}
+--- !u!114 &-4552108044367056369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4970291964280435624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dae56666c790c247a99fc6c2891bf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
+  Score: 20

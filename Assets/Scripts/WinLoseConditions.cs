@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class WinLoseConditions : MonoBehaviour
     private float score = 0;
 
     public float CurrentTime = 0;
+
+    HashSet<GameObject> _found = new HashSet<GameObject>(100);
 
     public float Score
     {
@@ -35,7 +38,7 @@ public class WinLoseConditions : MonoBehaviour
         CurrentTime = TimeForGameInSeconds;
         while (CurrentTime > 0)
         {
-            TimerText.text = CurrentTime.ToString(FormatMMSS((int)CurrentTime));
+            TimerText.text = FormatMMSS((int)CurrentTime);
             CurrentTime -= Time.deltaTime;
             yield return null;
         }
@@ -50,6 +53,11 @@ public class WinLoseConditions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_found.Contains(other.gameObject))
+            return;
+
+        _found.Add(other.gameObject);
+        
         if (other.TryGetComponent(out ScoreEntity score))
         {
             Score += score.Score;
