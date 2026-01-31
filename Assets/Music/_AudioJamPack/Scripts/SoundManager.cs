@@ -81,7 +81,7 @@ public sealed class SoundManager : MonoBehaviour
     private void EnsureSources()
     {
         if (_oneShot2D == null) _oneShot2D = CreateChildSource("OneShot2D", spatialBlend: 0f, loop: false);
-        if (_music == null) _music = CreateChildSource("Music", spatialBlend: 0f, loop: true);
+        if (_music == null) _music = CreateChildSource("Music", spatialBlend: 0f, loop: true);  
         if (_ambience == null) _ambience = CreateChildSource("Ambience", spatialBlend: 0f, loop: true);
     }
 
