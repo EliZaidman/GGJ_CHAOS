@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overrideIdName: GlassBreak
   bus: 1
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: ebfe09df39860434d9ea6fda416f88e8, type: 3}
   volume: 1
   cooldownSeconds: 0
   loop: 0

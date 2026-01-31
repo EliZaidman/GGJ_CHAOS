@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a63cd73e420cce48a877f4afc28374c, type: 3}
-  m_Name: VictoryYAY
+  m_Name: MoneyGained2
   m_EditorClassIdentifier: 
-  overrideIdName: VictoryYAY
+  overrideIdName: MoneyGained
   bus: 1
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 0a34ee0970f260c49afafbd8fcd61544, type: 3}
   volume: 1
   cooldownSeconds: 0
   loop: 0

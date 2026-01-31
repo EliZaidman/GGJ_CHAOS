@@ -20,7 +20,7 @@ MonoBehaviour:
   loop: 0
   randomizePitch: 0
   pitchMin: 1
-  pitchMax: 1
+  pitchMax: 2
   use3DWhenPositional: 1
   minDistance: 1
   maxDistance: 25

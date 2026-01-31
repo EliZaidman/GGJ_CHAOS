@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overrideIdName: CountToRoundStart
   bus: 1
-  clips: []
+  clips:
+  - {fileID: 8300000, guid: 2aafe4c680b43274e9debd2fca278dc6, type: 3}
   volume: 1
   cooldownSeconds: 0
   loop: 0
