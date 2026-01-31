@@ -1653,6 +1653,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 256598232520713770, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b697d337d7224fc4ab777ca299fe3638, type: 2}
+    - target: {fileID: 2083194608626419985, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 8fe2e249195a9ed4393b84eb49ac54e2, type: 2}
+    - target: {fileID: 3656898907413088542, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c60530aa33c5ed444a700fde879fb05e, type: 2}
+    - target: {fileID: 3815131831491382451, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 626b22e9e8464514abb285ede08eadbb, type: 2}
     - target: {fileID: 3905667100447943705, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1703,6 +1723,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5712453732804348691, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 8fe2e249195a9ed4393b84eb49ac54e2, type: 2}
+    - target: {fileID: 5774132219776099368, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b697d337d7224fc4ab777ca299fe3638, type: 2}
+    - target: {fileID: 6994550077102000924, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c60530aa33c5ed444a700fde879fb05e, type: 2}
+    - target: {fileID: 7447927102169665201, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: OutlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 626b22e9e8464514abb285ede08eadbb, type: 2}
     - target: {fileID: 9026360949991875131, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_Name
@@ -8315,17 +8355,17 @@ PrefabInstance:
     - target: {fileID: 2690044180578290071, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.91
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2690044180578290071, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.73
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2690044180578290071, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2690044180578290071, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
