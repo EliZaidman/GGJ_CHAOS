@@ -2,13 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WinLoseConditions : MonoBehaviour
 {
     public int TimeForGameInSeconds = 60 * 4;
     public TMP_Text TimerText;
     public TMP_Text ScoreText;
+    public GameObject WinScreen;
 
     private float score = 0;
 
@@ -42,6 +46,10 @@ public class WinLoseConditions : MonoBehaviour
             CurrentTime -= Time.deltaTime;
             yield return null;
         }
+
+        GetComponent<AudioSource>().Play();
+        WinScreen.SetActive(true);
+        WinScreen.GetComponentInChildren<Button>().onClick.AddListener(() => SceneManager.LoadScene(0));
 
         string FormatMMSS(int totalSeconds)
         {
