@@ -92,7 +92,7 @@ CapsuleCollider:
   m_Radius: 0.155
   m_Height: 0.82
   m_Direction: 1
-  m_Center: {x: 0, y: 0.4, z: -0.03}
+  m_Center: {x: 0, y: 0.42, z: 0}
 --- !u!114 &2872840054049017787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +448,7 @@ PrefabInstance:
     - target: {fileID: 256061087871211774, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.28
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 256061087871211774, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -784,7 +784,7 @@ PrefabInstance:
     - target: {fileID: 7233637019108110950, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.28
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7233637019108110950, guid: c7d6942a74fab5640ada4cbd5477389d,
         type: 3}
@@ -1172,7 +1172,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.35
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Center: {x: 0, y: 0.25, z: 0.15}
 --- !u!4 &968215349188979423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8902814760570352979, guid: c7d6942a74fab5640ada4cbd5477389d,
@@ -1378,7 +1378,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.35
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Center: {x: 0, y: 0.25, z: 0.15}
 --- !u!1 &8153040745314764402 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 560565377065474558, guid: c7d6942a74fab5640ada4cbd5477389d,
