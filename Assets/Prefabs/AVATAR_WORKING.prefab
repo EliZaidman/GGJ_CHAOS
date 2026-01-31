@@ -1146,7 +1146,7 @@ MonoBehaviour:
   GrabPoint: {fileID: 197858514982409952}
   Force: 800
   Damping: 20
-  MaxPullForce: 700
+  MaxPullForce: 50
   SnapDistance: 0.2
   HeldExtraDrag: 3
   JointBreakForce: 9000
@@ -1352,7 +1352,7 @@ MonoBehaviour:
   GrabPoint: {fileID: 8399683022509824274}
   Force: 800
   Damping: 20
-  MaxPullForce: 700
+  MaxPullForce: 50
   SnapDistance: 0.2
   HeldExtraDrag: 3
   JointBreakForce: 9000
