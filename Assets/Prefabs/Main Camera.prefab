@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3194289943210919797}
   - component: {fileID: 9183258662258362214}
   - component: {fileID: 2817578351909650576}
+  - component: {fileID: 728913472975724754}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -119,7 +120,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -153,7 +154,7 @@ PositionConstraint:
   m_TranslationAtRest: {x: -25.228329, y: 9.32, z: -52.43344}
   m_TranslationOffset: {x: 5.7800007, y: 9.32, z: -4.290001}
   m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
+  m_AffectTranslationY: 0
   m_AffectTranslationZ: 1
   m_Active: 1
   m_IsLocked: 1
@@ -178,6 +179,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4ca2bed911dcd4c80eee666a5ffba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &728913472975724754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606683060858215460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4dda8cdc46631c46bdd7f1acf846c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  Follow:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &7229250029591156471
 GameObject:
   m_ObjectHideFlags: 0
