@@ -18,11 +18,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e639c99500750d848abe7f07b180d405, type: 3}
   - {fileID: 8300000, guid: 0a34ee0970f260c49afafbd8fcd61544, type: 3}
   volume: 1
-  cooldownSeconds: 0
+  cooldownSeconds: 0.01
   loop: 0
-  randomizePitch: 0
+  randomizePitch: 1
   pitchMin: 1
-  pitchMax: 1
+  pitchMax: 1.2
   use3DWhenPositional: 1
   minDistance: 1
   maxDistance: 25

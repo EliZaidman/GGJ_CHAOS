@@ -27,6 +27,7 @@ public class RoundIntroFlyover : MonoBehaviour
 
     void Start()
     {
+        FTUE.Instance.ToggleFtue(true);
         if (positionConstraint == null)
         {
             positionConstraint=  GetComponent<PositionConstraint>();
@@ -45,6 +46,7 @@ public class RoundIntroFlyover : MonoBehaviour
     IEnumerator Run()
     {
         _running = true;
+    
 
        
 
@@ -80,6 +82,7 @@ public class RoundIntroFlyover : MonoBehaviour
             if (positionConstraint)
             {
                 positionConstraint.constraintActive = true;
+                
             }
 
         }
@@ -91,6 +94,8 @@ public class RoundIntroFlyover : MonoBehaviour
         if (gameplayRoot) gameplayRoot.SetActive(true);
 
         _running = false;
+        
+       
     }
 
     static float Ease01(float t, float power)
