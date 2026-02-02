@@ -2589,6 +2589,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5055164949903577650, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: jumpForce
+      value: 125
+      objectReference: {fileID: 0}
     - target: {fileID: 5712453732804348691, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: OutlineMaterial
@@ -11304,7 +11309,7 @@ PrefabInstance:
     - target: {fileID: 6712097050409510035, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
       propertyPath: TimeForGameInSeconds
-      value: 310
+      value: 240
       objectReference: {fileID: 0}
     - target: {fileID: 8616467289358205663, guid: 3ba7ea209e37f054599e0ec5c1f8172d,
         type: 3}
@@ -14098,6 +14103,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 507324857779389686, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 692386008170197398, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 947841797172301627, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2159937275420578410, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2588796868099545005, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2861916313537715138, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5428700504282061658, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 6596837804356181348, guid: f05c8616489ae6c4890fe6088e79a5b4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14148,10 +14188,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7425397835779314612, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7632598054614766737, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7732131336067877723, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 9188646734713807763, guid: f05c8616489ae6c4890fe6088e79a5b4,
         type: 3}
       propertyPath: m_Name
       value: DynamicMusic
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188646734713807763, guid: f05c8616489ae6c4890fe6088e79a5b4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16163,6 +16223,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6282810491050997313, guid: 960178c2ddaeeb6419925d37639fa719,
         type: 3}
+      propertyPath: playTemplateSfxOnf1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6282810491050997313, guid: 960178c2ddaeeb6419925d37639fa719,
+        type: 3}
+      propertyPath: playTemplateSfxOnSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6282810491050997313, guid: 960178c2ddaeeb6419925d37639fa719,
+        type: 3}
       propertyPath: playTemplateMusicOnStart
       value: 0
       objectReference: {fileID: 0}
@@ -16224,7 +16294,7 @@ PrefabInstance:
     - target: {fileID: 7903656600853476710, guid: 960178c2ddaeeb6419925d37639fa719,
         type: 3}
       propertyPath: musicVolume
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

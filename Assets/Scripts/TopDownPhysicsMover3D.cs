@@ -19,7 +19,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
 
     public Transform JumpRaycast;
     public LayerMask JumpLM;
-    public int jumpForce = 5;
+    public int jumpForce = 7;
 
     [Header("Rotation (Right Stick)")]
     [SerializeField] private float rotationSpeed = 720f; // degrees/sec
@@ -72,6 +72,7 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         {
             Debug.Log("JMP");
             rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            SoundManager.Play(SoundId.JumpCharacterWee); // ben plays Win sound
         }
 
         Vector2 moveRaw = input.Move;

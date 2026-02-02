@@ -31,11 +31,11 @@ public sealed class SoundManager : MonoBehaviour
     [SerializeField] private bool debugLogs = false;
 
     [Header("Global Volume")]
-    [Range(0f, 1f)] public float masterVolume = 1f;
-    [Range(0f, 1f)] public float musicVolume = 1f;
-    [Range(0f, 1f)] public float sfxVolume = 1f;
-    [Range(0f, 1f)] public float uiVolume = 1f;
-    [Range(0f, 1f)] public float ambienceVolume = 1f;
+    [Range(0f,2f)] public float masterVolume = 1f;
+    [Range(0f, 2f)] public float musicVolume = 0.4f;
+    [Range(0f, 2f)] public float sfxVolume = 1f;
+    [Range(0f, 2f)] public float uiVolume = 2f;
+    [Range(0f, 2f)] public float ambienceVolume = 1f;
 
     [Header("3D Defaults (only for PlayAt)")]
     public bool support3DSound = true;

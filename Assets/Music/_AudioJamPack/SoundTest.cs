@@ -10,13 +10,13 @@ public class SoundTest : MonoBehaviour
     public bool playTemplateMusicOnStart = true;
 
     [Tooltip("If ON, Spacebar will play template SFX.")]
-    public bool playTemplateSfxOnSpace = true;
+    public bool playTemplateSfxOnf1 = true;
 
     private void Awake()
     {
         if (playTemplateMusicOnStart)
         {
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            /*int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
             if (currentSceneIndex == 0)
             {
                 SoundManager.PlayMusic(SoundId.Lobby);
@@ -24,7 +24,7 @@ public class SoundTest : MonoBehaviour
             else
             {
                 SoundManager.PlayMusic(SoundId.music1);
-            }
+            }*/
 
           /*  //SoundManager.PlayMusic(SoundId.);
             Debug.Log("[SoundTest] SoundManager instance: " + (SoundManager.Instance != null));

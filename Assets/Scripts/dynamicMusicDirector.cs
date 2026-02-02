@@ -24,7 +24,7 @@ public class dynamicMusicDirector : MonoBehaviour
     {
         int index = 0;
 
-        _sources[index].volume = 1;
+        _sources[index].volume = 0.4f;
         index++;
 
         while (index < _sources.Length)

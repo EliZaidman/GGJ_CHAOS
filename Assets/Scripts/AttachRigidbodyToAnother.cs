@@ -78,7 +78,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
     public float freezeVelocityThreshold = 16f;
     public float cooldown = 0.2f;
     float cooldownTimer;
-    
+    private float timer = 0f;
     
     // Compatibility with your other scripts
     public bool IsHoldingSomething() => _connection != null && otherRB != null;
@@ -105,6 +105,7 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     void Update()
     {
+        timer += Time.deltaTime;
         // Visual-only safety: auto-clear highlight if lifetime expired
         if (HighlightLifetime > 0f && _highlightedRB != null && Time.time >= _highlightExpireTime)
         {
@@ -269,15 +270,29 @@ public class AttachRigidbodyToAnother : MonoBehaviour
 
     private void BensHitFreezeInElisCode(float speed) // ben
     {
-        if (speed > freezeVelocityThreshold)
+        if (timer < 0.05f)
+        {
+            return;
+        }
+        if (speed >= freezeVelocityThreshold/2 && speed < freezeVelocityThreshold ) 
         {
             cooldownTimer = cooldown;
+            SoundManager.Play(SoundId.HitWhooh);
+           
+        }
+        else if (speed > freezeVelocityThreshold)
+        {
+            
 
-            BensHitFreezelHitFreezeusing.Freeze(0.05f);
+          // BensHitFreezelHitFreezeusing.Freeze(0.05f);
 
             float strength = Mathf.Clamp(speed / 25f, 0.3f, 1f);
             TryRumble(strength, 0.1f);
+            SoundManager.Play(SoundId.HitWhooh);
+            SoundManager.Play(SoundId.BubbleImpact);
         }
+
+        timer = 0;
     }
 
     private void TryRumble(float intensity, float duration) // ben

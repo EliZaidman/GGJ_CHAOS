@@ -7,7 +7,6 @@ public class BensCameraShake : MonoBehaviour
 
     void Awake()
     {
-        print("Hey im ben, and if you are having camera issues its me and i made it here");
         Instance = this;
         originalPos = transform.localPosition;
     }

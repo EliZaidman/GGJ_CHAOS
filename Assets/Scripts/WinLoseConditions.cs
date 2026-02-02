@@ -56,7 +56,7 @@ public class WinLoseConditions : MonoBehaviour
 
         GetComponent<AudioSource>().Play();
         WinScreen.SetActive(true);
-        SoundManager.PlaySfx(SoundId.VictoryMexico); // ben plays Win sound
+        SoundManager.Play(SoundId.VictoryMexico); // ben plays Win sound
         WinScreen.GetComponentInChildren<Button>().onClick.AddListener(() => SceneManager.LoadScene(0));
         EndScoreText.text = score.ToString() + "$";
 
@@ -85,7 +85,7 @@ public class WinLoseConditions : MonoBehaviour
             Debug.LogWarning("Score item registered without score entity component.");
         }
 
-        SoundManager.PlayAt(SoundId.MoneyGained, other.transform.position); // ben plays money sound
+        SoundManager.Play(SoundId.MoneyGained); // ben plays money sound
     }
     public void RestartLevel()
     {

@@ -79,7 +79,7 @@ public class RoundIntroFlyover : MonoBehaviour
 
                 yield return null;
             }
-            
+           
 
         }
 
@@ -95,7 +95,7 @@ public class RoundIntroFlyover : MonoBehaviour
             positionConstraint.enabled = true;
                 
         }
-       
+        SoundManager.Play(SoundId.RoundStart); // ben plays Win sound
     }
 
     static float Ease01(float t, float power)
