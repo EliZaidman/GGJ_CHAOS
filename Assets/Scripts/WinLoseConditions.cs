@@ -70,7 +70,7 @@ public class WinLoseConditions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("trigger");
+        print("trigger" + other.gameObject.name);
         if (_found.Contains(other.gameObject))
             return;
 
