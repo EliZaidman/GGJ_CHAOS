@@ -79,15 +79,18 @@ public class WinLoseConditions : MonoBehaviour
         if (other.TryGetComponent(out ScoreEntity score))
         {
             Score += score.Score;
+            ScoreText.text = Score.ToString() + "$";
             other.gameObject.SetActive(false);
+            SoundManager.Play(SoundId.MoneyGained); // ben plays money sound
         }
         else
         {
+            return;
             Score += 1;
             Debug.LogWarning("Score item registered without score entity component.");
         }
 
-        SoundManager.Play(SoundId.MoneyGained); // ben plays money sound
+        
     }
     public void RestartLevel()
     {

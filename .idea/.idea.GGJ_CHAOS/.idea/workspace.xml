@@ -6,7 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="bd188e15-11b5-444c-9c12-5ce42c7e90a0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GGJ_CHAOS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GGJ_CHAOS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Level Design/Management.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Level Design/Management.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Assets/Plant.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Assets/Plant.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/ATM.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/ATM.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Coffee_Cup.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Coffee_Cup.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Keycard.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Keycard.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Radio.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Radio.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Screen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Screen.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Screen_TV.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Screen_TV.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Shelf.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Shelf.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Table.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Table.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/WinLoseConditions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WinLoseConditions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -105,7 +113,7 @@
       <updated>1769778643612</updated>
       <workItem from="1769778645591" duration="31823000" />
       <workItem from="1770023044323" duration="5055000" />
-      <workItem from="1770036331168" duration="2366000" />
+      <workItem from="1770036331168" duration="3802000" />
     </task>
     <servers />
   </component>
