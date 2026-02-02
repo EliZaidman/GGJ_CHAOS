@@ -19748,7 +19748,7 @@ PrefabInstance:
     - target: {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
       propertyPath: heightPerUnit
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7194319959241236869, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
@@ -19802,6 +19802,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7803354008216245082, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
+      propertyPath: dynamicCameraHeight
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7803354008216245082, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
       propertyPath: 'points.Array.data[0]'
       value: 
       objectReference: {fileID: 1272661897}
@@ -19840,7 +19845,8 @@ PrefabInstance:
       propertyPath: m_Sources.Array.data[3].sourceTransform
       value: 
       objectReference: {fileID: 1943935939}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
