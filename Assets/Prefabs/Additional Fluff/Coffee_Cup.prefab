@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7574707536848499388}
   - component: {fileID: 5848731017999217673}
   - component: {fileID: 1319521549890550334}
+  - component: {fileID: 4329768067833014514}
   m_Layer: 0
   m_Name: Coffee_Cup
   m_TagString: Untagged
@@ -141,3 +142,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2785377, y: 0.20000009, z: 0.20000009}
   m_Center: {x: -0.039268814, y: 0, z: 0}
+--- !u!114 &4329768067833014514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7521214928533511305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dae56666c790c247a99fc6c2891bf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
+  Score: 1

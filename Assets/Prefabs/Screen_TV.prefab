@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6180252490422501259}
   - component: {fileID: 3676233815763024783}
   - component: {fileID: -4861737885569438709}
+  - component: {fileID: 3196384051914850436}
   m_Layer: 0
   m_Name: Screen_TV
   m_TagString: Untagged
@@ -29,9 +30,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5729550348537353257}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4066, y: 1.4066, z: 1.4066}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -154,4 +155,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dae56666c790c247a99fc6c2891bf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
-  Score: 4
+  Score: 13
+--- !u!65 &3196384051914850436
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5729550348537353257}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8924377, y: 0.21298172, z: 0.95335954}
+  m_Center: {x: 0.0000009536743, y: 0.059711315, z: -0.000000073840816}

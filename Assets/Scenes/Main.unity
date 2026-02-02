@@ -2967,11 +2967,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sound Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 6282810491050997313, guid: 960178c2ddaeeb6419925d37639fa719,
-        type: 3}
-      propertyPath: playTemplateMusicOnStart
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7319858170042370950, guid: 960178c2ddaeeb6419925d37639fa719,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3020,11 +3015,6 @@ PrefabInstance:
     - target: {fileID: 7319858170042370950, guid: 960178c2ddaeeb6419925d37639fa719,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7903656600853476710, guid: 960178c2ddaeeb6419925d37639fa719,
-        type: 3}
-      propertyPath: musicVolume
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

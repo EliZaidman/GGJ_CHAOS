@@ -6,7 +6,7 @@ public class FTUE : MonoBehaviour
 {
     [SerializeField] TextMeshPro FTUE3DText;
     [SerializeField] GameObject FTUEToast;
-    bool PlayFtue = false;
+    bool PlayFtue;
     public static FTUE Instance;
     private void Awake()
     {
@@ -24,7 +24,6 @@ public class FTUE : MonoBehaviour
 
     public void ToggleFtue(bool active)
     {
-        print(active + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " + FTUE3DText.text);
         FTUE3DText.gameObject.SetActive(active);
         FTUEToast.gameObject.SetActive(active);
     }

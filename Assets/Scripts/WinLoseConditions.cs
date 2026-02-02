@@ -70,6 +70,7 @@ public class WinLoseConditions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        print("trigger");
         if (_found.Contains(other.gameObject))
             return;
 
@@ -78,6 +79,7 @@ public class WinLoseConditions : MonoBehaviour
         if (other.TryGetComponent(out ScoreEntity score))
         {
             Score += score.Score;
+            other.gameObject.SetActive(false);
         }
         else
         {

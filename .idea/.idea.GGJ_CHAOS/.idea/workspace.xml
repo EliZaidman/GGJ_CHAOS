@@ -6,52 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="bd188e15-11b5-444c-9c12-5ce42c7e90a0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GGJ_CHAOS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GGJ_CHAOS/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/JamAudio/Generated/SoundId.generated.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/JamAudio/Generated/SoundId.generated.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/168822__debsound__metal-06.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/168822__debsound__metal-06.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/ALARM BEFOR METAL THING1.3.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/ALARM BEFOR METAL THING1.3.mp3.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Bubble Game.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Bubble Game.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/BubbleImpact.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/BubbleImpact.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CashRegister1.mp3.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CashRegister1.mp3.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CashRegister2.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CashRegister2.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CountToRoundStart.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/CountToRoundStart.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/END GAME.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/END GAME.mp3.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Gameplay Music.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Gameplay Music.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/GlassBreak.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/GlassBreak.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/JUMP.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/JUMP.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/LEGO WALL BREAK.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/LEGO WALL BREAK.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Lobby Theme.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Lobby Theme.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/MASACH BAIT.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/MASACH BAIT.mp3.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/METAL THING1.3.mp3.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/METAL THING1.3.mp3.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/METAL THING1.4 WITH GROWLS.mp3.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/METAL THING1.4 WITH GROWLS.mp3.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/SFX1.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/SFX1.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/WRESTLING BELL.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/WRESTLING BELL.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 1 Game.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 1 Game.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 2 Game.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 2 Game.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 3 Game.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/Woosh 3 Game.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/mexican-mexican-mexico-mariachi-music-290633.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/mexican-mexican-mexico-mariachi-music-290633.wav.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/music1.wav.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/music1.wav.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/whimzikchillz.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Audio Clips/whimzikchillz.mp3.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Scripts/JamAudioMixer.mixer" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Scripts/JamAudioMixer.mixer.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Scripts/SoundManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Scripts/SoundManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundCues/JumpAirWhoosh.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundCues/JumpAirWhoosh.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundCues/VictoryMexico.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundCues/VictoryMexico.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundLibrary.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundLibrary.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Assets/3d/source/Environment Assets/Table_mat 1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Assets/3d/source/Environment Assets/Table_mat 1.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Assets/Plant.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Assets/Plant.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Fonts/27862 SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/27862 SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Prefabs/Sound Manager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/Prefabs/Sound Manager.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Music/_AudioJamPack/SoundTest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Coffee_Cup.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Coffee_Cup.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Keycard.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Additional Fluff/Keycard.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Chair.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Chair.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Screen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Screen.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Screen_TV.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Screen_TV.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Shelf.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Shelf.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Table.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Table.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Valuables Presets/Money_Stack.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Valuables Presets/Money_Stack.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level Design.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level Design.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AttachRigidbodyToAnother.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/AttachRigidbodyToAnother.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BensCameraShake.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BensCameraShake.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RoundIntroFlyover.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/RoundIntroFlyover.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TopDownPhysicsMover3D.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TopDownPhysicsMover3D.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FTUE.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FTUE.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/WinLoseConditions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WinLoseConditions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/dynamicMusicDirector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/dynamicMusicDirector.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +119,8 @@
       <option name="presentableId" value="Default" />
       <updated>1769778643612</updated>
       <workItem from="1769778645591" duration="31823000" />
-      <workItem from="1770023044323" duration="4902000" />
+      <workItem from="1770023044323" duration="5055000" />
+      <workItem from="1770036331168" duration="1369000" />
     </task>
     <servers />
   </component>

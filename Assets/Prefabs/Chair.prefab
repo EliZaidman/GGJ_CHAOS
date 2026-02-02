@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 483648113897580785}
   - component: {fileID: 5353340504265720909}
   - component: {fileID: 6735886715295157054}
+  - component: {fileID: 2581598021737549085}
   m_Layer: 0
   m_Name: Chair
   m_TagString: Untagged
@@ -350,6 +351,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreEntity
   Score: 2
+--- !u!65 &2581598021737549085
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5661205810403423437}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9321261, y: 0.9814678, z: 1.6201912}
+  m_Center: {x: -0.0023227334, y: -0.025927817, z: 0.8047369}
 --- !u!1 &7016410617458153948
 GameObject:
   m_ObjectHideFlags: 0
