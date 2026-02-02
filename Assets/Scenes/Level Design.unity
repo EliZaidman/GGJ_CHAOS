@@ -19730,10 +19730,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 7182200783363758070, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+    - target: {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: maxHeight
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: setupdone
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: smoothSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: heightPerUnit
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7194319959241236869, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}

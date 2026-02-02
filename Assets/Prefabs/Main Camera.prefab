@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9183258662258362214}
   - component: {fileID: 2817578351909650576}
   - component: {fileID: 7803354008216245082}
+  - component: {fileID: 2062528718681534355}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -96,7 +97,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1606683060858215460}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!114 &3194289943210919797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,10 +201,29 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   gameplayRoot: {fileID: 0}
+  dynamicCameraHeight: {fileID: 2062528718681534355}
   totalDuration: 5
   ease: 2
   gameplayCamTarget: {fileID: 7194319959241236869}
   playOnStart: 1
+--- !u!114 &2062528718681534355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606683060858215460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47923c7841eb7749b05b8484e91badd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  positionConstraint: {fileID: 9183258662258362214}
+  minHeight: 8
+  maxHeight: 16
+  heightPerUnit: 0.5
+  smoothSpeed: 5
+  setupdone: 0
 --- !u!1 &7229250029591156471
 GameObject:
   m_ObjectHideFlags: 0

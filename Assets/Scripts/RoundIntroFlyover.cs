@@ -14,7 +14,7 @@ public class RoundIntroFlyover : MonoBehaviour
     public Camera introCam;                 // your main camera
     public Transform[] points;              // P0..Pn
     public GameObject gameplayRoot;         // disable input/player scripts etc during intro
-
+    public DynamicCameraHeight dynamicCameraHeight;
     [Header("Timing")]
     public float totalDuration = 2.5f;      // whole intro length
     public float ease = 2.0f;               // 1=linear, 2=smoother
@@ -27,6 +27,10 @@ public class RoundIntroFlyover : MonoBehaviour
 
     void Start()
     {
+        if (dynamicCameraHeight == null)
+        {
+            dynamicCameraHeight = GetComponent<DynamicCameraHeight>();
+        }
         FTUE.Instance.ToggleFtue(true);
         if (positionConstraint == null)
         {
@@ -95,7 +99,10 @@ public class RoundIntroFlyover : MonoBehaviour
             positionConstraint.enabled = true;
                 
         }
+        dynamicCameraHeight.Setup();
         SoundManager.Play(SoundId.RoundStart); // ben plays Win sound
+        
+        
     }
 
     static float Ease01(float t, float power)
