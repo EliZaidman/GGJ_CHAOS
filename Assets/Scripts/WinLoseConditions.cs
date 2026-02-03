@@ -86,8 +86,8 @@ public class WinLoseConditions : MonoBehaviour
         else
         {
             return;
-            Score += 1;
-            Debug.LogWarning("Score item registered without score entity component.");
+            /*Score += 1;
+            Debug.LogWarning("Score item registered without score entity component.");*/
         }
 
         

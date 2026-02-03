@@ -8,6 +8,8 @@ public class TopDownPhysicsMover3D : MonoBehaviour
     [Header("Refs")]
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private CarryMotorState carryState;
+    [SerializeField] private Transform moveReference; // set to your gameplay camera transform
+
 
     [Header("Movement")]
     [SerializeField] private float maxSpeed = 10f;

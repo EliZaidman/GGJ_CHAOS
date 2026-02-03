@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,48 +7,212 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuSelectionScreen : MonoBehaviour
 {
-    public GameObject[] enable;
+    [Header("UI Slots (size 4)")] public GameObject[] enable;
     public GameObject[] disable;
-    int index = 0;
-    public float rotationSpeed = 3;
-    //Dictionary<PlayerInput, int>
 
-    public void PlayerJoinedHandler(PlayerInput input)
+    [Header("Rules")] [SerializeField] private int maxPlayers = 4;
+    [SerializeField] private int minPlayersToStart = 1;
+    [SerializeField] private int gameSceneBuildIndex = 1;
+
+    [Header("Rotation")] public float rotationSpeed = 3f;
+
+    private int index = 0;
+
+    // Track join order so "left" removes the correct slot
+    private readonly Dictionary<PlayerInput, int> playerToSlot = new();
+    private readonly Dictionary<PlayerInput, Coroutine> playerToRoutine = new();
+    private bool keyboardSlotTaken = false;
+
+
+    private void Awake()
     {
-        Debug.Log("Player " + index + " joined");
-        enable[index].SetActive(true);
-        disable[index].SetActive(false);
-        index++;
-        InputAction action = input.currentActionMap.actions.FirstOrDefault(ia => ia.name == "Move");
-        StartCoroutine(ReadInputRoutine(action, enable[index - 1]));
-
-        if (index == 4)
+        // Reset UI to "no players"
+        for (int i = 0; i < enable.Length; i++)
         {
-            SceneManager.LoadScene(1);
+            if (enable[i]) enable[i].SetActive(false);
+            if (disable[i]) disable[i].SetActive(true);
+        }
+
+        LobbyHandoff.Clear();
+
+        index = 0;
+        playerToSlot.Clear();
+        playerToRoutine.Clear();
+    }
+
+   public void PlayerJoinedHandler(PlayerInput input)
+{
+    if (!input) return;
+
+    // Don't register the same PlayerInput twice
+    if (playerToSlot.ContainsKey(input))
+        return;
+
+    // Cap players
+    if (index >= maxPlayers || index >= enable.Length || index >= disable.Length)
+    {
+        Destroy(input.gameObject);
+        return;
+    }
+
+    // Decide which slot this join gets
+    int slot = index;
+
+    // Determine if this joined player is using Keyboard/Mouse AND capture gamepad deviceId if any
+    bool usesKeyboardOrMouse = false;
+    int gamepadDeviceId = -1;
+
+    for (int i = 0; i < input.devices.Count; i++)
+    {
+        var d = input.devices[i];
+        if (d is Keyboard || d is Mouse)
+            usesKeyboardOrMouse = true;
+
+        if (d is Gamepad gp)
+            gamepadDeviceId = gp.deviceId;
+    }
+
+    // Allow ONLY ONE Keyboard+Mouse player total (host choice)
+    if (usesKeyboardOrMouse)
+    {
+        if (keyboardSlotTaken)
+        {
+            Destroy(input.gameObject);
+            return;
+        }
+        keyboardSlotTaken = true;
+    }
+
+    // ---- Persist lobby selection for the game scene ----
+    // Assumes you created LobbyHandoff (static) as described:
+    // LobbyHandoff.HasData, Active[], IsKeyboardMouse[], GamepadDeviceId[]
+    LobbyHandoff.HasData = true;
+    LobbyHandoff.Active[slot] = true;
+    LobbyHandoff.IsKeyboardMouse[slot] = usesKeyboardOrMouse;
+    LobbyHandoff.GamepadDeviceId[slot] = gamepadDeviceId;
+    // -----------------------------------------------
+
+    // Track slot locally for menu UI / leave handling
+    playerToSlot[input] = slot;
+
+    if (enable[slot]) enable[slot].SetActive(true);
+    if (disable[slot]) disable[slot].SetActive(false);
+
+    index++;
+
+    // Find Move action safely (for your rotating preview)
+    InputAction move = null;
+    var map = input.currentActionMap;
+    if (map != null)
+    {
+        foreach (var a in map.actions)
+        {
+            if (a != null && a.name == "Move")
+            {
+                move = a;
+                break;
+            }
         }
     }
 
-    private IEnumerator ReadInputRoutine(InputAction action, GameObject gameObject)
+    if (move != null && enable[slot] != null)
+        playerToRoutine[input] = StartCoroutine(ReadInputRoutine(move, enable[slot]));
+    else
+        Debug.LogWarning($"Joined player has no 'Move' action in map '{map?.name}'");
+}
+
+
+
+    public void PlayerLeftHandler(PlayerInput input)
     {
-        float rotation = 0;
-        float vel = 0;
+        if (!input) return;
+
+        if (!playerToSlot.TryGetValue(input, out int slot))
+            return;
+
+        // Detect if this leaving player used keyboard/mouse
+        bool usedKeyboardOrMouse = false;
+        for (int i = 0; i < input.devices.Count; i++)
+        {
+            var d = input.devices[i];
+            if (d is Keyboard || d is Mouse)
+            {
+                usedKeyboardOrMouse = true;
+                break;
+            }
+        }
+
+        if (usedKeyboardOrMouse)
+            keyboardSlotTaken = false;
+
+        // Stop preview routine
+        if (playerToRoutine.TryGetValue(input, out var routine) && routine != null)
+            StopCoroutine(routine);
+
+        playerToRoutine.Remove(input);
+        playerToSlot.Remove(input);
+
+        // Reset slot UI
+        if (enable[slot]) enable[slot].SetActive(false);
+        if (disable[slot]) disable[slot].SetActive(true);
+    }
+
+
+    private IEnumerator ReadInputRoutine(InputAction action, GameObject target)
+    {
+        float rotation = 0f;
+        float vel = 0f;
+
         while (true)
         {
+            if (action == null || target == null)
+                yield break;
+
             var v2 = action.ReadValue<Vector2>();
-            gameObject.transform.Rotate(0, -rotation * Time.deltaTime, 0);
+
+            target.transform.Rotate(0, -rotation * Time.deltaTime, 0);
+
             rotation += v2.x * rotationSpeed;
-            rotation = UnityEngine.Mathf.SmoothDamp(rotation, 0, ref vel, 0.75f);
-            if (rotation > 720) rotation = 720;
-            if (rotation <= -720) rotation = -720;
+            rotation = Mathf.SmoothDamp(rotation, 0, ref vel, 0.75f);
+            rotation = Mathf.Clamp(rotation, -720f, 720f);
+
             yield return null;
         }
     }
 
-    public void PlayerLeftHandler(PlayerInput input)
+    // Hook this to a UI button OR call it from Update when pressing Enter, etc.
+    private bool _starting = false;
+
+    public void StartGame()
     {
-        Debug.Log("Player " + index + " left");
-        index--;
-        enable[index].SetActive(true);
-        disable[index].SetActive(false);
+        if (_starting) return;
+
+        int joinedCount = playerToSlot.Count;
+        if (joinedCount < minPlayersToStart)
+            return;
+
+        _starting = true;
+        SceneManager.LoadScene(gameSceneBuildIndex);
+    }
+
+
+    // Optional: quick keyboard start (Enter)
+    private void Update()
+    {
+        // Keyboard host start
+        if (Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
+            StartGame();
+
+        // Any gamepad start (works for local + Remote Play virtual pads)
+        var pads = Gamepad.all;
+        for (int i = 0; i < pads.Count; i++)
+        {
+            var pad = pads[i];
+            if (pad != null && pad.startButton.wasPressedThisFrame) // best "Start" button
+            {
+                StartGame();
+                break;
+            }
+        }
     }
 }

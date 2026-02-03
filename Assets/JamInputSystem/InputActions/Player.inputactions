@@ -601,11 +601,33 @@
                 },
                 {
                     "name": "",
+                    "id": "c2fb8b5f-4230-4a54-9e8d-59c36e08e222",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
+                    "action": "GrabLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "781d116d-e552-4e87-b38e-846e7be5249e",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
+                    "action": "GrabRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a3f76b0-b1ba-4572-8260-836140769637",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";KeyboardMouse",
                     "action": "GrabRight",
                     "isComposite": false,
                     "isPartOfComposite": false

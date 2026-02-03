@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Animations;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -84,7 +85,38 @@ public class JamInputManager : MonoBehaviour
     [SerializeField] JamPlayerSlot[] slots = new JamPlayerSlot[4];
 
     #endregion
+    public void ApplyLobbyHandoffAndRebuild()
+    {
+        if (!LobbyHandoff.HasData)
+            return;
 
+        for (int i = 0; i < slots.Length && i < LobbyHandoff.MaxPlayers; i++)
+        {
+            EnsureSlotExists(i);
+
+            if (!LobbyHandoff.Active[i])
+            {
+                slots[i].kind = JamPlayerKind.Disabled;
+                continue;
+            }
+
+            // Host can be KBM or gamepad based on what they joined with.
+            slots[i].kind = LobbyHandoff.IsKeyboardMouse[i]
+                ? JamPlayerKind.HumanKeyboardMouse
+                : JamPlayerKind.HumanGamepadAny;
+        }
+
+        ApplyRuntimeConfig(); // calls RebuildAllPlayers()
+    }
+    Gamepad FindGamepadByDeviceId(int deviceId)
+    {
+        if (deviceId < 0) return null;
+        var list = Gamepad.all;
+        for (int i = 0; i < list.Count; i++)
+            if (list[i] != null && list[i].deviceId == deviceId)
+                return list[i];
+        return null;
+    }
     #region Inspector - Debug Control (Manager-Driven)
 
     public enum DebugPreset
@@ -318,6 +350,32 @@ public class JamInputManager : MonoBehaviour
 #endif
 
     #endregion
+    void DisableUnusedExistingPlayersAndUpdateCameras()
+    {
+        if (setupMode != SetupMode.UseExistingPlayerObjects) return;
+        if (existingPlayers == null || slots == null) return;
+
+        var dyn = FindObjectOfType<DynamicCameraHeight>(true);
+
+        var flyover = FindObjectOfType<RoundIntroFlyover>(true);
+        var pc = flyover != null ? flyover.positionConstraint : null;
+
+        for (int i = 0; i < existingPlayers.Length && i < slots.Length; i++)
+        {
+            var go = existingPlayers[i];
+            if (go == null) continue;
+
+            bool active = slots[i] != null && slots[i].kind != JamPlayerKind.Disabled;
+            if (active) continue;
+
+            // Update cameras BEFORE disabling
+            var tr = go.transform;
+            RemoveFromDynamicCameraHeight(dyn, tr);
+            RemoveFromPositionConstraint(pc, tr);
+
+            go.SetActive(false);
+        }
+    }
 
     #region Rebuild
 
@@ -328,46 +386,109 @@ public class JamInputManager : MonoBehaviour
         RebuildAllPlayers();
     }
 
-    void RebuildAllPlayers()
+   void RebuildAllPlayers()
+{
+    // 1) Clean up old spawned players (only the ones we created)
+    if (setupMode == SetupMode.SpawnJamPlayers)
     {
-        // 1) Clean up old spawned players (only the ones we created)
+        for (int i = _spawned.Count - 1; i >= 0; i--)
+        {
+            if (_spawned[i] != null)
+                Destroy(_spawned[i]);
+        }
+        _spawned.Clear();
+    }
+
+    // 2) Reset device claims for this rebuild
+    _claimedKeyboardMouse = false;
+
+    // Re-snapshot gamepads at rebuild time (after devices are initialized)
+    _claimedGamepads = new bool[Gamepad.all.Count];
+
+    // 3) If we came from the main menu, override slots to match what actually joined there
+    if (LobbyHandoff.HasData)
+    {
+        for (int i = 0; i < slots.Length && i < LobbyHandoff.MaxPlayers; i++)
+        {
+            EnsureSlotExists(i);
+
+            if (!LobbyHandoff.Active[i])
+            {
+                slots[i].kind = JamPlayerKind.Disabled;
+                continue;
+            }
+
+            slots[i].kind = LobbyHandoff.IsKeyboardMouse[i]
+                ? JamPlayerKind.HumanKeyboardMouse
+                : JamPlayerKind.HumanGamepadAny;
+        }
+    }
+
+    // 4) If using existing characters, disable unused ones and update camera scripts first
+    if (setupMode == SetupMode.UseExistingPlayerObjects && existingPlayers != null)
+    {
+        
+        var dyn = FindObjectOfType<DynamicCameraHeight>(true);
+
+        var flyover = FindObjectOfType<RoundIntroFlyover>(true);
+        var pc = flyover != null ? flyover.positionConstraint : null;
+
+        // First pass: for any disabled slot, remove that exact transform from camera systems and disable the character.
+        for (int i = 0; i < existingPlayers.Length && i < slots.Length; i++)
+        {
+            var go = existingPlayers[i];
+            if (go == null) continue;
+
+            bool active = slots[i] != null && slots[i].kind != JamPlayerKind.Disabled;
+            if (active) continue;
+
+            var tr = go.transform;
+
+            // DynamicCameraHeight.targets (exact transform only)
+            if (dyn != null && dyn.targets != null)
+                dyn.targets.Remove(tr);
+
+            // PositionConstraint sources (exact transform only)
+            if (pc != null)
+            {
+                for (int s = pc.sourceCount - 1; s >= 0; s--)
+                {
+                    var src = pc.GetSource(s).sourceTransform;
+                    if (src == null || src == tr)
+                        pc.RemoveSource(s);
+                }
+            }
+
+            go.SetActive(false);
+        }
+    }
+
+    // 5) Build from slots
+    for (int i = 0; i < slots.Length; i++)
+    {
+        var slot = slots[i];
+        if (slot == null || slot.kind == JamPlayerKind.Disabled)
+            continue;
+
         if (setupMode == SetupMode.SpawnJamPlayers)
         {
-            for (int i = _spawned.Count - 1; i >= 0; i--)
-            {
-                if (_spawned[i] != null)
-                    Destroy(_spawned[i]);
-            }
-            _spawned.Clear();
+            var go = SpawnSlot(i, slot.kind);
+            if (go != null) _spawned.Add(go);
         }
-
-        // 2) Reset device claims for this rebuild
-        _claimedKeyboardMouse = false;
-
-        // Re-snapshot gamepads at rebuild time (after devices are initialized)
-        _claimedGamepads = new bool[Gamepad.all.Count];
-
-        // 3) Build from slots
-        for (int i = 0; i < slots.Length; i++)
+        else
         {
-            var slot = slots[i];
-            if (slot == null || slot.kind == JamPlayerKind.Disabled)
-                continue;
+            // Ensure active characters are enabled (they might have been disabled in editor)
+            if (existingPlayers != null && i < existingPlayers.Length && existingPlayers[i] != null)
+                existingPlayers[i].SetActive(true);
 
-            if (setupMode == SetupMode.SpawnJamPlayers)
-            {
-                var go = SpawnSlot(i, slot.kind);
-                if (go != null) _spawned.Add(go);
-            }
-            else
-            {
-                UseExistingAndConfigureSlot(i, slot.kind);
-            }
+            UseExistingAndConfigureSlot(i, slot.kind);
         }
-
-        // 4) After building, push manager debug settings to all relevant players
-        ApplyDebugConfigToAllPlayers();
     }
+
+    // 6) After building, push manager debug settings to all relevant players
+    ApplyDebugConfigToAllPlayers();
+}
+
 
     GameObject SpawnSlot(int slotIndex, JamPlayerKind kind)
     {
@@ -533,36 +654,115 @@ GameObject EnsureJamRigChild(GameObject owner, int slotIndex, JamPlayerKind kind
 
     #region PlayerInput Configuration
 
-    void ConfigurePlayerInputForSlot(PlayerInput pi, JamPlayerKind kind)
+   void ConfigurePlayerInputForSlot(PlayerInput pi, JamPlayerKind kind)
+{
+    if (pi == null) return;
+
+    // Short warnings only when likely to break input
+    if (pi.actions == null)
+        Debug.LogWarning("[JamInputManager] PlayerInput has no Actions asset assigned. Assign JamInputActions.", pi);
+
+    if (string.IsNullOrWhiteSpace(pi.defaultActionMap))
+        pi.defaultActionMap = DefaultActionMap;
+
+    // If we're coming from the main menu, we want to preserve what each slot picked.
+    // We infer the slot index from the GameObject name your manager assigns:
+    // Spawn mode: "[JamPlayer {slot}] (...)"
+    // Existing mode: "[JamPlayer {slot}] (...) {ownername}"
+    int slotIndex = -1;
+    string n = pi.gameObject.name;
+
+    // Parse the first integer found in the name after "[JamPlayer "
+    // (KISS: avoids regex allocations and works with your stable naming)
+    const string prefix = "[JamPlayer ";
+    int p = n.IndexOf(prefix, System.StringComparison.Ordinal);
+    if (p >= 0)
     {
-        if (pi == null) return;
-
-        // Short warnings only when likely to break input
-        if (pi.actions == null)
-            Debug.LogWarning("[JamInputManager] PlayerInput has no Actions asset assigned. Assign JamInputActions.", pi);
-
-        if (string.IsNullOrWhiteSpace(pi.defaultActionMap))
-            pi.defaultActionMap = DefaultActionMap;
-
-        switch (kind)
+        p += prefix.Length;
+        int end = n.IndexOf(']', p);
+        if (end > p)
         {
-            case JamPlayerKind.HumanKeyboardMouse:
-                ConfigureAsKeyboardMouse(pi);
-                break;
-
-            case JamPlayerKind.HumanGamepadAny:
-                ConfigureAsAnyGamepad(pi);
-                break;
-
-            case JamPlayerKind.HumanAnyUnusedConnected:
-                ConfigureAsAnyUnusedConnected(pi);
-                break;
-
-            case JamPlayerKind.SimulatedBot:
-                ConfigureAsBot(pi);
-                break;
+            int value = 0;
+            bool any = false;
+            for (int i = p; i < end; i++)
+            {
+                char c = n[i];
+                if (c < '0' || c > '9') break;
+                any = true;
+                value = (value * 10) + (c - '0');
+            }
+            if (any) slotIndex = value;
         }
     }
+
+    // If lobby handoff exists, override the requested kind for active slots.
+    // This ensures the game scene matches exactly what happened in the menu.
+    if (LobbyHandoff.HasData && slotIndex >= 0 && slotIndex < LobbyHandoff.MaxPlayers)
+    {
+        if (!LobbyHandoff.Active[slotIndex])
+        {
+            ConfigureAsBot(pi); // quiet/off
+            return;
+        }
+
+        kind = LobbyHandoff.IsKeyboardMouse[slotIndex]
+            ? JamPlayerKind.HumanKeyboardMouse
+            : JamPlayerKind.HumanGamepadAny;
+    }
+
+    switch (kind)
+    {
+        case JamPlayerKind.HumanKeyboardMouse:
+            ConfigureAsKeyboardMouse(pi);
+            break;
+
+        case JamPlayerKind.HumanGamepadAny:
+        {
+            // Prefer the exact gamepad used in the menu (deviceId), fallback to any unused
+            pi.enabled = true;
+            pi.neverAutoSwitchControlSchemes = true;
+            pi.defaultControlScheme = SchemeGamepad;
+
+            Gamepad gp = null;
+
+            if (LobbyHandoff.HasData && slotIndex >= 0 && slotIndex < LobbyHandoff.MaxPlayers)
+            {
+                int preferredId = LobbyHandoff.GamepadDeviceId[slotIndex];
+                if (preferredId >= 0)
+                {
+                    var list = Gamepad.all;
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (list[i] != null && list[i].deviceId == preferredId)
+                        {
+                            gp = list[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (gp == null)
+                gp = ClaimNextUnusedGamepad();
+
+            if (gp != null)
+                pi.SwitchCurrentControlScheme(SchemeGamepad, gp);
+            else
+                SetWaiting(pi, "No unused gamepad available");
+
+            break;
+        }
+
+        case JamPlayerKind.HumanAnyUnusedConnected:
+            ConfigureAsAnyUnusedConnected(pi);
+            break;
+
+        case JamPlayerKind.SimulatedBot:
+            ConfigureAsBot(pi);
+            break;
+    }
+}
+
 
     void ConfigureAsKeyboardMouse(PlayerInput pi)
     {
@@ -588,21 +788,25 @@ GameObject EnsureJamRigChild(GameObject owner, int slotIndex, JamPlayerKind kind
         }
     }
 
-    void ConfigureAsAnyGamepad(PlayerInput pi)
+    void ConfigureAsAnyGamepad(PlayerInput pi, int slotIndex)
     {
         pi.enabled = true;
         pi.neverAutoSwitchControlSchemes = true;
         pi.defaultControlScheme = SchemeGamepad;
 
-        var gp = ClaimNextUnusedGamepad();
+        // Prefer the exact gamepad used in the menu
+        Gamepad gp = null;
+        if (LobbyHandoff.HasData)
+            gp = FindGamepadByDeviceId(LobbyHandoff.GamepadDeviceId[slotIndex]);
+
+        // Fallback to any unused
+        if (gp == null)
+            gp = ClaimNextUnusedGamepad();
+
         if (gp != null)
-        {
             pi.SwitchCurrentControlScheme(SchemeGamepad, gp);
-        }
         else
-        {
             SetWaiting(pi, "No unused gamepad available");
-        }
     }
 
     bool EnsurePlayerInputUserReady(PlayerInput pi)
@@ -767,6 +971,23 @@ GameObject EnsureJamRigChild(GameObject owner, int slotIndex, JamPlayerKind kind
 
         // Keep this as Log (not Warning) so it doesn't feel like an error.
         Debug.Log($"[JamInputManager] {pi.gameObject.name} is waiting for a device. ({reason})", pi);
+    }
+    void RemoveFromDynamicCameraHeight(DynamicCameraHeight dyn, Transform t)
+    {
+        if (dyn == null || dyn.targets == null || t == null) return;
+        dyn.targets.Remove(t); // removes first match; fine for KISS
+    }
+
+    void RemoveFromPositionConstraint(PositionConstraint pc, Transform t)
+    {
+        if (pc == null || t == null) return;
+
+        for (int i = pc.sourceCount - 1; i >= 0; i--)
+        {
+            var src = pc.GetSource(i).sourceTransform;
+            if (src == t || src == null)
+                pc.RemoveSource(i);
+        }
     }
 
     
