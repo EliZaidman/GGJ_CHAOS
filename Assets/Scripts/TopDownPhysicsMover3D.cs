@@ -66,15 +66,46 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         }
 
         // JUMP
-        bool jump = input.JumpDown;
+        Jump(input);
 
-        if (jump && Physics.Raycast(JumpRaycast.position, Vector3.down, 0.1f, JumpLM))
+        var wishDir = Move(input, locked, speedMult);
+
+        Vector2 lookRaw = input.Look;
+        float lookMag = lookRaw.magnitude;
+
+        Look(lookMag, lookRaw, wishDir);
+    }
+
+    private void Look(float lookMag, Vector2 lookRaw, Vector3 wishDir)
+    {
+        bool usingLook = lookMag > lookDeadzone;
+
+        Vector3 lookDir = Vector3.zero;
+
+        if (usingLook)
         {
-            Debug.Log("JMP");
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
-            SoundManager.Play(SoundId.JumpCharacterWee); // ben plays Win sound
+            lookRaw = lookRaw.normalized;
+            lookDir = new Vector3(lookRaw.x, 0f, lookRaw.y);
+        }
+        else if (fallbackRotateToMove && wishDir.sqrMagnitude > 0.01f)
+        {
+            lookDir = wishDir;
         }
 
+        if (lookDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+            Quaternion newRot = Quaternion.RotateTowards(
+                rb.rotation,
+                targetRot,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+            rb.MoveRotation(newRot);
+        }
+    }
+
+    private Vector3 Move(JamInputPlayer input, bool locked, float speedMult)
+    {
         Vector2 moveRaw = input.Move;
         float moveMag = moveRaw.magnitude;
 
@@ -135,32 +166,18 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
         }
 
-        Vector2 lookRaw = input.Look;
-        float lookMag = lookRaw.magnitude;
+        return wishDir;
+    }
 
-        bool usingLook = lookMag > lookDeadzone;
+    private void Jump(JamInputPlayer input)
+    {
+        bool jump = input.JumpDown;
 
-        Vector3 lookDir = Vector3.zero;
-
-        if (usingLook)
+        if (jump && Physics.Raycast(JumpRaycast.position, Vector3.down, 0.1f, JumpLM))
         {
-            lookRaw = lookRaw.normalized;
-            lookDir = new Vector3(lookRaw.x, 0f, lookRaw.y);
-        }
-        else if (fallbackRotateToMove && wishDir.sqrMagnitude > 0.01f)
-        {
-            lookDir = wishDir;
-        }
-
-        if (lookDir.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
-            Quaternion newRot = Quaternion.RotateTowards(
-                rb.rotation,
-                targetRot,
-                rotationSpeed * Time.fixedDeltaTime
-            );
-            rb.MoveRotation(newRot);
+            Debug.Log("JMP");
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            SoundManager.Play(SoundId.JumpCharacterWee); // ben plays Win sound
         }
     }
 }
