@@ -16056,6 +16056,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1c35f85078132349beb677f4685e646, type: 3}
+--- !u!1 &1735776383 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1606683060858215460, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2227329027720407695}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1735776384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735776383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47923c7841eb7749b05b8484e91badd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicCameraHeight
+  targets:
+  - {fileID: 645142560}
+  - {fileID: 838037465}
+  - {fileID: 1710881207}
+  - {fileID: 1943935939}
+  minY: 8
+  maxY: 20
+  spreadStart: 15
+  spreadEnd: 50
+  smoothSpeedUp: 8
+  smoothSpeedDown: 3
+  useFarthestPair: 0
+  doneSetup: 1
 --- !u!1001 &1736422191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19804,7 +19835,7 @@ PrefabInstance:
         type: 3}
       propertyPath: dynamicCameraHeight
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1735776384}
     - target: {fileID: 7803354008216245082, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
       propertyPath: 'points.Array.data[0]'
@@ -19845,11 +19876,14 @@ PrefabInstance:
       propertyPath: m_Sources.Array.data[3].sourceTransform
       value: 
       objectReference: {fileID: 1943935939}
-    m_RemovedComponents:
-    - {fileID: 2062528718681534355, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1606683060858215460, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1735776384}
   m_SourcePrefab: {fileID: 100100000, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a, type: 3}
 --- !u!1001 &2559563505039889752
 PrefabInstance:

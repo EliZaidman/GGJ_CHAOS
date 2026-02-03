@@ -1,52 +1,124 @@
+
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class DynamicCameraHeight : MonoBehaviour
 {
-    public PositionConstraint positionConstraint;
+    [Header("Targets (players)")]
+    public List<Transform> targets = new List<Transform>(4);
 
-    [Header("Height Settings")]
-    public float minHeight = 8f;
-    public float maxHeight = 20f;
-    public float heightPerUnit = 0.5f; // how much camera rises per player spread
-    public float smoothSpeed = 5f;
-    public bool setupdone;
+    [Header("Height Range")]
+    public float minY = 8f;
+    public float maxY = 20f;
 
-    float currentHeight;
+    [Header("Spread -> Height")]
+    [Tooltip("If players are within this spread (meters), camera stays at minY.")]
+    public float spreadStart = 10f;
 
-   public void Setup()
-    {
-        if (!positionConstraint)
-            positionConstraint = GetComponent<PositionConstraint>();
+    [Tooltip("At this spread (meters) camera reaches maxY.")]
+    public float spreadEnd = 30f;
 
-        currentHeight = minHeight;
-        setupdone = true;
-        print("setupdone");
-    }
+    [Header("Smoothing")]
+    public float smoothSpeedUp = 6f;
+    public float smoothSpeedDown = 3f;
 
+    [Header("Options")]
+    [Tooltip("Use the farthest pair distance instead of bounds size. Slightly heavier but more accurate.")]
+    public bool useFarthestPair = false;
+
+    public bool doneSetup;
     void LateUpdate()
     {
-        if (!setupdone||positionConstraint.sourceCount == 0 ||   !positionConstraint.enabled) return;
-        // Calculate bounds of all sources
-        Bounds bounds = new Bounds(
-            positionConstraint.GetSource(0).sourceTransform.position,
-            Vector3.zero);
+        if (!doneSetup ||targets == null || targets.Count == 0) return;
 
-        for (int i = 1; i < positionConstraint.sourceCount; i++)
+        // 1) Compute spread on XZ plane
+        float spread = useFarthestPair ? GetFarthestPairXZ(targets) : GetBoundsXZ(targets);
+
+        // 2) Convert spread to 0..1 (0=close => minY, 1=far => maxY)
+        float t = Mathf.InverseLerp(spreadStart, spreadEnd, spread);
+        t = Mathf.Clamp01(t);
+
+        // 3) Target height
+        float targetY = Mathf.Lerp(minY, maxY, t);
+
+        // 4) Smooth (faster up, slower down)
+        float currentY = transform.position.y;
+        float speed = targetY > currentY ? smoothSpeedUp : smoothSpeedDown;
+        float newY = Mathf.Lerp(currentY, targetY, Time.deltaTime * speed);
+
+        // 5) Apply only Y (rotation + XZ stay as-is)
+        Vector3 pos = transform.position;
+        pos.y = newY;
+        transform.position = pos;
+    }
+
+    float GetBoundsXZ(List<Transform> list)
+    {
+        bool hasAny = false;
+        float minX = 0, maxX = 0, minZ = 0, maxZ = 0;
+
+        for (int i = 0; i < list.Count; i++)
         {
-            var source = positionConstraint.GetSource(i);
-            bounds.Encapsulate(source.sourceTransform.position);
+            var tr = list[i];
+            if (!tr) continue;
+
+            Vector3 p = tr.position;
+            if (!hasAny)
+            {
+                minX = maxX = p.x;
+                minZ = maxZ = p.z;
+                hasAny = true;
+            }
+            else
+            {
+                if (p.x < minX) minX = p.x;
+                if (p.x > maxX) maxX = p.x;
+                if (p.z < minZ) minZ = p.z;
+                if (p.z > maxZ) maxZ = p.z;
+            }
         }
 
-        float spread = Mathf.Max(bounds.size.x, bounds.size.z);
+        if (!hasAny) return 0f;
 
-        float targetHeight = minHeight + spread * heightPerUnit;
-        targetHeight = Mathf.Clamp(targetHeight, minHeight, maxHeight);
+        float sizeX = maxX - minX;
+        float sizeZ = maxZ - minZ;
+        return Mathf.Max(sizeX, sizeZ);
+    }
 
-        currentHeight = Mathf.Lerp(currentHeight, targetHeight, Time.deltaTime * smoothSpeed);
+    float GetFarthestPairXZ(List<Transform> list)
+    {
+        float maxDist = 0f;
 
-        Vector3 pos = transform.position;
-        pos.y = currentHeight;
-        transform.position = pos;
+        for (int i = 0; i < list.Count; i++)
+        {
+            var a = list[i];
+            if (!a) continue;
+
+            Vector3 pa = a.position;
+
+            for (int j = i + 1; j < list.Count; j++)
+            {
+                var b = list[j];
+                if (!b) continue;
+
+                Vector3 pb = b.position;
+                float dx = pa.x - pb.x;
+                float dz = pa.z - pb.z;
+                float d = Mathf.Sqrt(dx * dx + dz * dz);
+
+                if (d > maxDist) maxDist = d;
+            }
+        }
+
+        return maxDist;
+    }
+
+    // Optional helper if you spawn players dynamically:
+    public void SetTargets(params Transform[] newTargets)
+    {
+        targets.Clear();
+        if (newTargets == null) return;
+        for (int i = 0; i < newTargets.Length; i++)
+            if (newTargets[i]) targets.Add(newTargets[i]);
     }
 }

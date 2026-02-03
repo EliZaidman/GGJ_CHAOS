@@ -99,7 +99,7 @@ public class RoundIntroFlyover : MonoBehaviour
             positionConstraint.enabled = true;
                 
         }
-        dynamicCameraHeight.Setup();
+        dynamicCameraHeight.doneSetup = true;
         SoundManager.Play(SoundId.RoundStart); // ben plays Win sound
         
         
