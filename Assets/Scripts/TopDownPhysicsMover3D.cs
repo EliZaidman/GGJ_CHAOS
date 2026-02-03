@@ -5,30 +5,28 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class TopDownPhysicsMover3D : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] private PlayerInput playerInput;
+    [Header("Refs")] [SerializeField] private PlayerInput playerInput;
     [SerializeField] private CarryMotorState carryState;
     [SerializeField] private Transform moveReference; // set to your gameplay camera transform
 
 
-    [Header("Movement")]
-    [SerializeField] private float maxSpeed = 10f;
+    [Header("Movement")] [SerializeField] private float maxSpeed = 10f;
     [SerializeField] private float acceleration = 30f;
     [SerializeField] private float deceleration = 10f;
     [SerializeField] private float turnAssistMultiplier = 1.8f;
-    [Range(0f, 0.5f)]
-    [SerializeField] private float inputDeadzone = 0.20f;
+    [Range(0f, 0.5f)] [SerializeField] private float inputDeadzone = 0.20f;
 
     public Transform JumpRaycast;
     public LayerMask JumpLM;
     public int jumpForce = 7;
 
-    [Header("Rotation (Right Stick)")]
-    [SerializeField] private float rotationSpeed = 720f; // degrees/sec
-    [Range(0f, 0.5f)]
-    [SerializeField] private float lookDeadzone = 0.25f;
-    [Tooltip("If true, player rotates toward movement when right stick idle")]
-    [SerializeField] private bool fallbackRotateToMove = true;
+    [Header("Rotation (Right Stick)")] [SerializeField]
+    private float rotationSpeed = 720f; // degrees/sec
+
+    [Range(0f, 0.5f)] [SerializeField] private float lookDeadzone = 0.25f;
+
+    [Tooltip("If true, player rotates toward movement when right stick idle")] [SerializeField]
+    private bool fallbackRotateToMove = true;
 
     public float LinearNormalizedSpeed => rb.linearVelocity.magnitude / maxSpeed;
     private Rigidbody rb;
@@ -40,8 +38,8 @@ public class TopDownPhysicsMover3D : MonoBehaviour
         if (playerInput == null)
         {
             playerInput = GetComponent<PlayerInput>()
-                ?? GetComponentInChildren<PlayerInput>(true)
-                ?? GetComponentInParent<PlayerInput>();
+                          ?? GetComponentInChildren<PlayerInput>(true)
+                          ?? GetComponentInParent<PlayerInput>();
         }
 
         if (carryState == null)
@@ -49,6 +47,9 @@ public class TopDownPhysicsMover3D : MonoBehaviour
 
         rb.constraints = new RigidbodyConstraints();
         rb.freezeRotation = true;
+
+        if (moveReference == null && Camera.main != null)
+            moveReference = Camera.main.transform;
     }
 
     void FixedUpdate()
@@ -122,8 +123,11 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             moveRaw = moveRaw.normalized * moveMag;
         }
 
-        Vector3 wishDir = new Vector3(moveRaw.x, 0f, moveRaw.y);
-        if (wishDir.sqrMagnitude > 1f) wishDir.Normalize();
+
+        Vector3 wishDir;
+        // Vector3 wishDir = OldDirections(moveRaw);
+        wishDir = CameraRelativeDirections(moveRaw);
+
 
         // If movement is locked (super heavy)
         if (locked)
@@ -168,6 +172,38 @@ public class TopDownPhysicsMover3D : MonoBehaviour
             rb.linearVelocity = new Vector3(newVXZ.x, v.y, newVXZ.z);
         }
 
+        return wishDir;
+    }
+
+    private Vector3 CameraRelativeDirections(Vector2 moveRaw)
+    {
+        Vector3 wishDir;
+        if (moveReference != null)
+        {
+            Vector3 camForward = moveReference.forward;
+            camForward.y = 0f;
+            camForward.Normalize();
+
+            Vector3 camRight = moveReference.right;
+            camRight.y = 0f;
+            camRight.Normalize();
+
+            wishDir = (camRight * moveRaw.x + camForward * moveRaw.y);
+        }
+        else
+        {
+            // fallback: world-relative
+            wishDir = new Vector3(moveRaw.x, 0f, moveRaw.y);
+        }
+
+        if (wishDir.sqrMagnitude > 1f) wishDir.Normalize();
+        return wishDir;
+    }
+
+    private static Vector3 OldDirections(Vector2 moveRaw)
+    {
+        Vector3 wishDir = new Vector3(moveRaw.x, 0f, moveRaw.y);
+        if (wishDir.sqrMagnitude > 1f) wishDir.Normalize();
         return wishDir;
     }
 

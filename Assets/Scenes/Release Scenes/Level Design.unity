@@ -2575,6 +2575,11 @@ PrefabInstance:
       propertyPath: OutlineMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 8fe2e249195a9ed4393b84eb49ac54e2, type: 2}
+    - target: {fileID: 2646341119632834308, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: moveReference
+      value: 
+      objectReference: {fileID: 1735776385}
     - target: {fileID: 3141710118674417903, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -2645,6 +2650,11 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 125
       objectReference: {fileID: 0}
+    - target: {fileID: 5055164949903577650, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: moveReference
+      value: 
+      objectReference: {fileID: 1735776385}
     - target: {fileID: 5712453732804348691, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: OutlineMaterial
@@ -2655,6 +2665,11 @@ PrefabInstance:
       propertyPath: OutlineMaterial
       value: 
       objectReference: {fileID: 2100000, guid: b697d337d7224fc4ab777ca299fe3638, type: 2}
+    - target: {fileID: 6431401346704751881, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: moveReference
+      value: 
+      objectReference: {fileID: 1735776385}
     - target: {fileID: 6564069621371345813, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_Enabled
@@ -2670,6 +2685,11 @@ PrefabInstance:
       propertyPath: OutlineMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 626b22e9e8464514abb285ede08eadbb, type: 2}
+    - target: {fileID: 8167842150872365227, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: moveReference
+      value: 
+      objectReference: {fileID: 1735776385}
     - target: {fileID: 9026360949991875131, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_Name
@@ -16145,6 +16165,12 @@ MonoBehaviour:
   smoothSpeedDown: 3
   useFarthestPair: 0
   doneSetup: 1
+--- !u!4 &1735776385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7194319959241236869, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2227329027720407695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1736422191
 PrefabInstance:
   m_ObjectHideFlags: 0
