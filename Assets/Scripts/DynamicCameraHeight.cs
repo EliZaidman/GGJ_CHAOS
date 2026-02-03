@@ -29,7 +29,7 @@ public class DynamicCameraHeight : MonoBehaviour
     public bool doneSetup;
     void LateUpdate()
     {
-        if (!doneSetup ||targets == null || targets.Count == 0) return;
+        if (!doneSetup ||targets == null || targets.Count <= 1) return;
 
         // 1) Compute spread on XZ plane
         float spread = useFarthestPair ? GetFarthestPairXZ(targets) : GetBoundsXZ(targets);

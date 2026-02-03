@@ -204,7 +204,7 @@ public class MainMenuSelectionScreen : MonoBehaviour
             StartGame();
 
         // Any gamepad start (works for local + Remote Play virtual pads)
-        var pads = Gamepad.all;
+     /*   var pads = Gamepad.all;
         for (int i = 0; i < pads.Count; i++)
         {
             var pad = pads[i];
@@ -213,6 +213,6 @@ public class MainMenuSelectionScreen : MonoBehaviour
                 StartGame();
                 break;
             }
-        }
+        }*/
     }
 }

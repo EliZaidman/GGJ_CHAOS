@@ -864,7 +864,6 @@ GameObject:
   - component: {fileID: 334895992}
   - component: {fileID: 334895991}
   - component: {fileID: 334895993}
-  - component: {fileID: 334895994}
   m_Layer: 0
   m_Name: INPUT
   m_TagString: Untagged
@@ -998,18 +997,6 @@ MonoBehaviour:
   minPlayersToStart: 1
   gameSceneBuildIndex: 1
   rotationSpeed: 3
---- !u!114 &334895994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 334895989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c4a76098f4a3b040aa695909d4feff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &575807473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,6 +2007,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1129367915}
   m_CullTransparentMesh: 1
+--- !u!1 &1202574148 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4228611681237765579, guid: 960178c2ddaeeb6419925d37639fa719,
+    type: 3}
+  m_PrefabInstance: {fileID: 1616745731}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1202574149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202574148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f02acc92d88cb4ab5703da1d052741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1443619541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2054,7 +2059,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 156, y: 34}
+  m_AnchoredPosition: {x: 182, y: 34}
   m_SizeDelta: {x: 156.2857, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1443619543
@@ -2448,7 +2453,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4228611681237765579, guid: 960178c2ddaeeb6419925d37639fa719,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1202574149}
   m_SourcePrefab: {fileID: 100100000, guid: 960178c2ddaeeb6419925d37639fa719, type: 3}
 --- !u!1 &1692275761
 GameObject:
@@ -2463,12 +2472,12 @@ GameObject:
   - component: {fileID: 1692275764}
   - component: {fileID: 1692275763}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Start Game Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1692275762
 RectTransform:
   m_ObjectHideFlags: 0
