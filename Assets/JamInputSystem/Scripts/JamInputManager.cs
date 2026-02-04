@@ -22,9 +22,11 @@ using UnityEditor;
 /// </summary>
 [DisallowMultipleComponent]
 public class JamInputManager : MonoBehaviour
-{
+{ 
     #region Inspector - Modes & Slots
+   
 
+    
     public enum SetupMode
     {
         /// <summary>Manager instantiates our Jam player prefab per active slot.</summary>
@@ -61,7 +63,8 @@ public class JamInputManager : MonoBehaviour
         // -1 = no preference (safe default)
         public int preferredGamepadDeviceId { get; set; } = -1;
     }
-
+    
+ 
 
     [Header("Mode")]
     [Tooltip(
@@ -150,8 +153,9 @@ public class JamInputManager : MonoBehaviour
         Verbose,
         Custom
     }
-
+   
     [System.Serializable]
+    
     public class DebugConfig
     {
         [Tooltip("If enabled, JamInputManager will add/enable JamInputDebug on each Jam player and push settings.")]
@@ -362,6 +366,10 @@ public class JamInputManager : MonoBehaviour
             }
         }
 
+        
+
+        
+
         StartCoroutine(DelayedInitialBuild());
     }
 
@@ -374,15 +382,13 @@ public class JamInputManager : MonoBehaviour
 #endif
 
     #endregion
+    
     void DisableUnusedExistingPlayersAndUpdateCameras()
     {
         if (setupMode != SetupMode.UseExistingPlayerObjects) return;
         if (existingPlayers == null || slots == null) return;
 
-        var dyn = FindObjectOfType<DynamicCameraHeight>(true);
-
-        var flyover = FindObjectOfType<RoundIntroFlyover>(true);
-        var pc = flyover != null ? flyover.positionConstraint : null;
+       
 
         for (int i = 0; i < existingPlayers.Length && i < slots.Length; i++)
         {
@@ -394,8 +400,8 @@ public class JamInputManager : MonoBehaviour
 
             // Update cameras BEFORE disabling
             var tr = go.transform;
-            RemoveFromDynamicCameraHeight(dyn, tr);
-            RemoveFromPositionConstraint(pc, tr);
+            RemoveFromDynamicCameraHeight( tr);
+            RemoveFromPositionConstraint( tr);
 
             go.SetActive(false);
         }
@@ -462,6 +468,23 @@ public class JamInputManager : MonoBehaviour
             slots[i].preferredGamepadDeviceId = -1;
         }
     }
+// --- BONUS SAFETY (SAFE): only clamp when lobby data exists ---
+    if (LobbyHandoff.HasData)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            EnsureSlotExists(i);
+
+            if (i >= LobbyHandoff.MaxPlayers || !LobbyHandoff.Active[i])
+            {
+                slots[i].kind = JamPlayerKind.Disabled;
+                slots[i].preferredGamepadDeviceId = -1;
+            }
+            // else: keep whatever the lobby said for this slot
+        }
+    }
+
+
 
     // 4) If using existing characters, disable unused ones and update camera scripts first
     if (setupMode == SetupMode.UseExistingPlayerObjects && existingPlayers != null)
@@ -496,7 +519,7 @@ public class JamInputManager : MonoBehaviour
             go.SetActive(false);
         }
     }
-
+    DisableUnusedExistingPlayersAndUpdateCameras();
     // 5) Build from slots
     for (int i = 0; i < slots.Length; i++)
     {
@@ -1000,15 +1023,21 @@ GameObject EnsureJamRigChild(GameObject owner, int slotIndex, JamPlayerKind kind
 
         // Keep this as Log (not Warning) so it doesn't feel like an error.
         Debug.Log($"[JamInputManager] {pi.gameObject.name} is waiting for a device. ({reason})", pi);
+        pi.gameObject.SetActive(false);
+        RemoveFromDynamicCameraHeight(pi.gameObject.transform);
+        RemoveFromPositionConstraint(pi.gameObject.transform);
     }
-    void RemoveFromDynamicCameraHeight(DynamicCameraHeight dyn, Transform t)
-    {
+    void RemoveFromDynamicCameraHeight( Transform t)
+    { var dyn = FindObjectOfType<DynamicCameraHeight>(true);
         if (dyn == null || dyn.targets == null || t == null) return;
         dyn.targets.Remove(t); // removes first match; fine for KISS
     }
 
-    void RemoveFromPositionConstraint(PositionConstraint pc, Transform t)
+
+    void RemoveFromPositionConstraint( Transform t)
     {
+        var  flyover = FindObjectOfType<RoundIntroFlyover>(true);
+        var pc = flyover != null ? flyover.positionConstraint : null;
         if (pc == null || t == null) return;
 
         for (int i = pc.sourceCount - 1; i >= 0; i--)

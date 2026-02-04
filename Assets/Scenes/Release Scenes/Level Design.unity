@@ -2575,6 +2575,11 @@ PrefabInstance:
       propertyPath: OutlineMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 8fe2e249195a9ed4393b84eb49ac54e2, type: 2}
+    - target: {fileID: 2541352088848951582, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2646341119632834308, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: moveReference
@@ -2643,6 +2648,11 @@ PrefabInstance:
     - target: {fileID: 3905667100447943705, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745262137355699240, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4773685777901140396, guid: e78ba423708d5724cb7ae8279682b6e4,
@@ -2715,6 +2725,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6826874343482370835, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6994550077102000924, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: OutlineMaterial
@@ -2730,6 +2745,11 @@ PrefabInstance:
       propertyPath: moveReference
       value: 
       objectReference: {fileID: 1735776385}
+    - target: {fileID: 8549804968511876785, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9026360949991875131, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_Name

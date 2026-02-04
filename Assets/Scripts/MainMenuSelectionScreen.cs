@@ -221,7 +221,7 @@ public void StartGame()
     _starting = true;
 
     // Build a clean, compact handoff (0..N-1) in join order
-    LobbyHandoff.Clear();
+    LobbyHandoff.Clear();                // IMPORTANT: clear here (safe) then fill
     LobbyHandoff.HasData = true;
 
     int slot = 0;
@@ -239,30 +239,23 @@ public void StartGame()
         for (int d = 0; d < input.devices.Count; d++)
         {
             var dev = input.devices[d];
-
-            if (dev is Keyboard || dev is Mouse)
-                usesKM = true;
-
-            if (dev is Gamepad gp)
-                gamepadId = gp.deviceId;
+            if (dev is Keyboard || dev is Mouse) usesKM = true;
+            if (dev is Gamepad gp) gamepadId = gp.deviceId;
         }
 
-        // Enforce "only one KBM player" at handoff time too (safety)
-        if (usesKM && keyboardSlotTaken == false)
+        // Only allow one KBM entry; skip extras defensively
+        if (usesKM && keyboardSlotTaken && slot > 0)
         {
-            // If keyboardSlotTaken got out of sync for any reason, resync it here
-            keyboardSlotTaken = true;
+            // If you want to hard-reject extra KBM joins earlier, do it in PlayerJoinedHandler.
+            // Here we just avoid corrupting the handoff.
+            continue;
         }
 
-        // Prevent duplicate gamepad ids ending up in two slots (can happen if pairing got weird)
+        // Prevent duplicate gamepad ids ending up in two slots
         if (!usesKM && gamepadId != -1)
         {
-            if (usedGamepadIds.Contains(gamepadId))
-            {
-                // Skip this entry rather than corrupt handoff
+            if (!usedGamepadIds.Add(gamepadId))
                 continue;
-            }
-            usedGamepadIds.Add(gamepadId);
         }
 
         LobbyHandoff.Active[slot] = true;
@@ -276,17 +269,20 @@ public void StartGame()
     if (slot < minPlayersToStart)
     {
         _starting = false;
-        LobbyHandoff.Clear();
+        LobbyHandoff.Clear(); // leave lobby clean if we didn't start
         return;
     }
-// Release devices from menu PlayerInputs before switching scenes
-    foreach (var input in FindObjectsOfType<PlayerInput>())
+
+    // Release devices from menu PlayerInputs before switching scenes
+    // (this prevents gameplay pairing from failing)
+    foreach (var pi in FindObjectsOfType<PlayerInput>())
     {
-        Destroy(input.gameObject);
+        Destroy(pi.gameObject);
     }
 
     SceneManager.LoadScene(gameSceneBuildIndex);
 }
+
 
 
 
