@@ -4,7 +4,7 @@ public class GameSceneLobbyApply : MonoBehaviour
 {
     public JamInputManager jamInputManager;
 
-    private void Start()
+    private void Awake()
     {
         if (jamInputManager != null)
             jamInputManager.ApplyLobbyHandoffAndRebuild();

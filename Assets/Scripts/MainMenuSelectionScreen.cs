@@ -9,6 +9,7 @@ public class MainMenuSelectionScreen : MonoBehaviour
 {
     [Header("UI Slots (size 4)")] public GameObject[] enable;
     public GameObject[] disable;
+    private readonly List<PlayerInput> joinOrder = new();
 
     [Header("Rules")] [SerializeField] private int maxPlayers = 4;
     [SerializeField] private int minPlayersToStart = 1;
@@ -47,6 +48,7 @@ public class MainMenuSelectionScreen : MonoBehaviour
     // Don't register the same PlayerInput twice
     if (playerToSlot.ContainsKey(input))
         return;
+    joinOrder.Add(input);
 
     // Cap players
     if (index >= maxPlayers || index >= enable.Length || index >= disable.Length)
@@ -123,39 +125,63 @@ public class MainMenuSelectionScreen : MonoBehaviour
 
 
 
-    public void PlayerLeftHandler(PlayerInput input)
+public void PlayerLeftHandler(PlayerInput input)
+{
+    if (!input) return;
+
+    if (!playerToSlot.TryGetValue(input, out int slot))
+        return;
+
+    // Detect if this leaving player used keyboard/mouse
+    bool usedKeyboardOrMouse = false;
+    for (int i = 0; i < input.devices.Count; i++)
     {
-        if (!input) return;
-
-        if (!playerToSlot.TryGetValue(input, out int slot))
-            return;
-
-        // Detect if this leaving player used keyboard/mouse
-        bool usedKeyboardOrMouse = false;
-        for (int i = 0; i < input.devices.Count; i++)
+        var d = input.devices[i];
+        if (d is Keyboard || d is Mouse)
         {
-            var d = input.devices[i];
-            if (d is Keyboard || d is Mouse)
-            {
-                usedKeyboardOrMouse = true;
-                break;
-            }
+            usedKeyboardOrMouse = true;
+            break;
         }
-
-        if (usedKeyboardOrMouse)
-            keyboardSlotTaken = false;
-
-        // Stop preview routine
-        if (playerToRoutine.TryGetValue(input, out var routine) && routine != null)
-            StopCoroutine(routine);
-
-        playerToRoutine.Remove(input);
-        playerToSlot.Remove(input);
-
-        // Reset slot UI
-        if (enable[slot]) enable[slot].SetActive(false);
-        if (disable[slot]) disable[slot].SetActive(true);
     }
+
+    if (usedKeyboardOrMouse)
+        keyboardSlotTaken = false;
+
+    // Stop preview routine
+    if (playerToRoutine.TryGetValue(input, out var routine) && routine != null)
+        StopCoroutine(routine);
+
+    playerToRoutine.Remove(input);
+    playerToSlot.Remove(input);
+    joinOrder.Remove(input);
+
+    // Reset slot UI
+    if (enable != null && slot >= 0 && slot < enable.Length && enable[slot])
+        enable[slot].SetActive(false);
+
+    if (disable != null && slot >= 0 && slot < disable.Length && disable[slot])
+        disable[slot].SetActive(true);
+
+    // ---- IMPORTANT: Clear persisted lobby handoff for this slot ----
+    if (slot >= 0 && slot < LobbyHandoff.MaxPlayers)
+    {
+        LobbyHandoff.Active[slot] = false;
+        LobbyHandoff.IsKeyboardMouse[slot] = false;
+        LobbyHandoff.GamepadDeviceId[slot] = -1;
+
+        // Recompute HasData (any active slot)
+        bool anyActive = false;
+        for (int i = 0; i < LobbyHandoff.MaxPlayers; i++)
+        {
+            if (LobbyHandoff.Active[i]) { anyActive = true; break; }
+        }
+        LobbyHandoff.HasData = anyActive;
+    }
+
+    // Optional: if you still rely on index elsewhere, keep it sane
+    index = playerToSlot.Count;
+}
+
 
 
     private IEnumerator ReadInputRoutine(InputAction action, GameObject target)
@@ -183,17 +209,85 @@ public class MainMenuSelectionScreen : MonoBehaviour
     // Hook this to a UI button OR call it from Update when pressing Enter, etc.
     private bool _starting = false;
 
-    public void StartGame()
+public void StartGame()
+{
+    if (_starting) return;
+
+    // Use joinOrder as the authoritative order
+    int joinedCount = (joinOrder != null) ? joinOrder.Count : playerToSlot.Count;
+    if (joinedCount < minPlayersToStart)
+        return;
+
+    _starting = true;
+
+    // Build a clean, compact handoff (0..N-1) in join order
+    LobbyHandoff.Clear();
+    LobbyHandoff.HasData = true;
+
+    int slot = 0;
+    var usedGamepadIds = new HashSet<int>();
+
+    for (int j = 0; j < joinOrder.Count && slot < LobbyHandoff.MaxPlayers; j++)
     {
-        if (_starting) return;
+        var input = joinOrder[j];
+        if (!input) continue;
 
-        int joinedCount = playerToSlot.Count;
-        if (joinedCount < minPlayersToStart)
-            return;
+        bool usesKM = false;
+        int gamepadId = -1;
 
-        _starting = true;
-        SceneManager.LoadScene(gameSceneBuildIndex);
+        // Detect devices for this player
+        for (int d = 0; d < input.devices.Count; d++)
+        {
+            var dev = input.devices[d];
+
+            if (dev is Keyboard || dev is Mouse)
+                usesKM = true;
+
+            if (dev is Gamepad gp)
+                gamepadId = gp.deviceId;
+        }
+
+        // Enforce "only one KBM player" at handoff time too (safety)
+        if (usesKM && keyboardSlotTaken == false)
+        {
+            // If keyboardSlotTaken got out of sync for any reason, resync it here
+            keyboardSlotTaken = true;
+        }
+
+        // Prevent duplicate gamepad ids ending up in two slots (can happen if pairing got weird)
+        if (!usesKM && gamepadId != -1)
+        {
+            if (usedGamepadIds.Contains(gamepadId))
+            {
+                // Skip this entry rather than corrupt handoff
+                continue;
+            }
+            usedGamepadIds.Add(gamepadId);
+        }
+
+        LobbyHandoff.Active[slot] = true;
+        LobbyHandoff.IsKeyboardMouse[slot] = usesKM;
+        LobbyHandoff.GamepadDeviceId[slot] = usesKM ? -1 : gamepadId;
+
+        slot++;
     }
+
+    // If we ended up with fewer than min players after filtering, don't start
+    if (slot < minPlayersToStart)
+    {
+        _starting = false;
+        LobbyHandoff.Clear();
+        return;
+    }
+// Release devices from menu PlayerInputs before switching scenes
+    foreach (var input in FindObjectsOfType<PlayerInput>())
+    {
+        Destroy(input.gameObject);
+    }
+
+    SceneManager.LoadScene(gameSceneBuildIndex);
+}
+
 
 
     // Optional: quick keyboard start (Enter)
