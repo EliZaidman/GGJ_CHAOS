@@ -2645,6 +2645,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4773685777901140396, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_JoinBehavior
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4773685777901140396, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: m_JoinAction.m_Action.m_Name
+      value: Join
+      objectReference: {fileID: 0}
     - target: {fileID: 5055164949903577650, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: jumpForce
@@ -2670,6 +2680,36 @@ PrefabInstance:
       propertyPath: moveReference
       value: 
       objectReference: {fileID: 1735776385}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: spawnedPlayersParent
+      value: 
+      objectReference: {fileID: 1695326220}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: slots.Array.data[0].kind
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: slots.Array.data[1].kind
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: slots.Array.data[2].kind
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: slots.Array.data[3].kind
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+        type: 3}
+      propertyPath: jamPlayerPrefabOrTemplate
+      value: 
+      objectReference: {fileID: 796535301}
     - target: {fileID: 6564069621371345813, guid: e78ba423708d5724cb7ae8279682b6e4,
         type: 3}
       propertyPath: m_Enabled
@@ -2722,7 +2762,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b79d3259a9a6e0429aa89267301fbcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  jamInputManager: {fileID: 0}
+  jamInputManager: {fileID: 342621677}
+--- !u!114 &342621677 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6485332113601487298, guid: e78ba423708d5724cb7ae8279682b6e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 342621672}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 342621673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b549958b293ded04da6c79d7cd043564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JamInputManager
 --- !u!4 &349235188 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7165849028623426074, guid: bd69ab277fb32e2499118495a07b867d,
@@ -6262,6 +6314,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 775549341}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &796535301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1065338119851641616, guid: e78ba423708d5724cb7ae8279682b6e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 342621672}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcccc981e713d446aa3dc7fd96d31cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JamInputPlayer
 --- !u!4 &805744519 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4906560252137657087, guid: 54f10c01257659c4683915c77332ff91,
@@ -16022,6 +16086,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3935445669087544231, guid: 571670dac58bdac499b1bedacd7edd80,
     type: 3}
   m_PrefabInstance: {fileID: 1691216252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1695326220 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3905667100447943705, guid: e78ba423708d5724cb7ae8279682b6e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 342621672}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1710881207 stripped
 Transform:
