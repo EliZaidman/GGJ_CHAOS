@@ -29,28 +29,44 @@ public class DynamicCameraHeight : MonoBehaviour
     public bool doneSetup;
     void LateUpdate()
     {
-        if (!doneSetup ||targets == null || targets.Count > 1) return;
+        if (!doneSetup || targets == null || targets.Count == 0) return;
+
+        // Count valid targets (so spread works even if list has nulls)
+        int validCount = 0;
+        for (int i = 0; i < targets.Count; i++)
+            if (targets[i]) validCount++;
+
+        if (validCount <= 1)
+        {
+            // With 0/1 player just ease toward min height
+            float currentY0 = transform.position.y;
+            float newY0 = Mathf.Lerp(currentY0, minY, Time.deltaTime * smoothSpeedDown);
+            var p0 = transform.position;
+            p0.y = newY0;
+            transform.position = p0;
+            return;
+        }
 
         // 1) Compute spread on XZ plane
         float spread = useFarthestPair ? GetFarthestPairXZ(targets) : GetBoundsXZ(targets);
 
-        // 2) Convert spread to 0..1 (0=close => minY, 1=far => maxY)
-        float t = Mathf.InverseLerp(spreadStart, spreadEnd, spread);
-        t = Mathf.Clamp01(t);
+        // 2) Convert spread to 0..1
+        float t = Mathf.Clamp01(Mathf.InverseLerp(spreadStart, spreadEnd, spread));
 
         // 3) Target height
         float targetY = Mathf.Lerp(minY, maxY, t);
 
-        // 4) Smooth (faster up, slower down)
+        // 4) Smooth Y (faster up, slower down)
         float currentY = transform.position.y;
         float speed = targetY > currentY ? smoothSpeedUp : smoothSpeedDown;
         float newY = Mathf.Lerp(currentY, targetY, Time.deltaTime * speed);
 
-        // 5) Apply only Y (rotation + XZ stay as-is)
+        // 5) Apply only Y (XZ stays 100% owned by the constraint)
         Vector3 pos = transform.position;
         pos.y = newY;
         transform.position = pos;
     }
+
 
     float GetBoundsXZ(List<Transform> list)
     {

@@ -16245,16 +16245,14 @@ MonoBehaviour:
   targets:
   - {fileID: 645142560}
   - {fileID: 838037465}
-  - {fileID: 1710881207}
-  - {fileID: 1943935939}
   minY: 8
-  maxY: 20
-  spreadStart: 15
-  spreadEnd: 50
+  maxY: 18
+  spreadStart: 10
+  spreadEnd: 30
   smoothSpeedUp: 8
   smoothSpeedDown: 3
-  useFarthestPair: 0
-  doneSetup: 1
+  useFarthestPair: 1
+  doneSetup: 0
 --- !u!4 &1735776385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7194319959241236869, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
@@ -20045,6 +20043,36 @@ PrefabInstance:
       propertyPath: 'points.Array.data[3]'
       value: 
       objectReference: {fileID: 319870319}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_Weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_IsLocked
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_AffectTranslationX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_AffectTranslationY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_AffectTranslationZ
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
+        type: 3}
+      propertyPath: m_TranslationOffset.z
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 9183258662258362214, guid: 0fe4e72e7f3d06c4caf5eb2d647ec94a,
         type: 3}
       propertyPath: m_Sources.Array.data[0].sourceTransform
