@@ -85,11 +85,11 @@ public class JamInputManager : MonoBehaviour
     [Tooltip(
         "If you already spawn players elsewhere or have custom player prefabs/scripts, assign them here.\n" +
         "JamInputManager will add missing PlayerInput + JamInputPlayer (if possible) and configure them per slot.")]
-    [SerializeField] GameObject[] existingPlayers = new GameObject[4];
+    [SerializeField] public GameObject[] existingPlayers = new GameObject[4];
 
     [Header("Player Slots (max 4)")]
     [Tooltip("Each slot decides if it is active and what kind of device it should use.")]
-    [SerializeField] JamPlayerSlot[] slots = new JamPlayerSlot[4];
+    [SerializeField]public JamPlayerSlot[] slots = new JamPlayerSlot[4];
 
     #endregion
     public void ApplyLobbyHandoffAndRebuild()
