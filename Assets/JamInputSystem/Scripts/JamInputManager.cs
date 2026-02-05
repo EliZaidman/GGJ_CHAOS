@@ -555,20 +555,32 @@ GameObject SpawnSlot(int slotIndex, JamPlayerKind kind)
         return null;
     }
 
-    var instance = Instantiate(jamPlayerPrefabOrTemplate, Vector3.zero, Quaternion.identity, spawnedPlayersParent);
-    instance.name = $"[JamPlayer {slotIndex}] ({kind})";
+    // IMPORTANT: This sets PlayerInput.playerIndex = slotIndex deterministically
+    var pi = PlayerInput.Instantiate(
+        jamPlayerPrefabOrTemplate.gameObject,
+        playerIndex: slotIndex,
+        splitScreenIndex: -1,
+        controlScheme: null,
+        pairWithDevice: null
+    );
 
-    var pi = instance.GetComponent<PlayerInput>();
     if (pi == null)
     {
-        Debug.LogError($"[JamInputManager] Spawned Jam player is missing PlayerInput (slot {slotIndex}).", instance);
-        Destroy(instance.gameObject);
+        Debug.LogError($"[JamInputManager] PlayerInput.Instantiate failed (slot {slotIndex}).", this);
         return null;
     }
 
+    var go = pi.gameObject;
+    go.transform.SetParent(spawnedPlayersParent, worldPositionStays: false);
+    go.transform.localPosition = Vector3.zero;
+    go.transform.localRotation = Quaternion.identity;
+
+    go.name = $"[JamPlayer {slotIndex}] ({kind})";
+
     ConfigurePlayerInputForSlot(pi, kind, slotIndex);
-    return instance.gameObject;
+    return go;
 }
+
 
 
     #endregion

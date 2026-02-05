@@ -13,7 +13,7 @@ public class BensCameraShake : MonoBehaviour
 
     public void Shake(float strength = 0.2f, float duration = 0.15f)
     {
-        StartCoroutine(DoShake(strength, duration));
+       // StartCoroutine(DoShake(strength, duration));
     }
 
     System.Collections.IEnumerator DoShake(float strength, float duration)
